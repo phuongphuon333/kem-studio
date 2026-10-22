@@ -280,7 +280,7 @@
         </div>
     </main>
 
-    <!-- MODALS -->
+    <!-- FULL FEATURE PRODUCT MODAL -->
     <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/50 backdrop-blur-sm hidden overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full my-8 p-6 sm:p-8 space-y-6 shadow-2xl border border-cream-200 max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center border-b border-cream-200 pb-4">
@@ -289,7 +289,12 @@
             </div>
 
             <form id="product-form" onsubmit="saveProduct(event)" class="space-y-6 text-xs">
+                
+                <!-- 1. THÔNG TIN CƠ BẢN -->
                 <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                    <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-tan"></i> 1. Thông Tin Cơ Bản
+                    </h4>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block font-semibold mb-1">Mã SP (ID) *</label>
@@ -297,7 +302,7 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label class="block font-semibold mb-1">Tên Sản Phẩm *</label>
-                            <input type="text" id="p-name" required placeholder="vd: Túi Canvas Grand Tote" class="w-full p-2.5 rounded-xl border bg-white font-semibold">
+                            <input type="text" id="p-name" required placeholder="vd: Túi Canvas Grand Studio Tote" class="w-full p-2.5 rounded-xl border bg-white font-semibold">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -314,38 +319,95 @@
                             <input type="number" id="p-price" required placeholder="450000" class="w-full p-2.5 rounded-xl border bg-white">
                         </div>
                         <div>
-                            <label class="block font-semibold mb-1">Badge</label>
-                            <input type="text" id="p-badge" placeholder="vd: grand" class="w-full p-2.5 rounded-xl border bg-white">
+                            <label class="block font-semibold mb-1">Badge Nổi Bật</label>
+                            <input type="text" id="p-badge" placeholder="vd: grand, essential" class="w-full p-2.5 rounded-xl border bg-white">
                         </div>
                     </div>
                     <div class="flex items-center space-x-6 pt-2">
                         <label class="flex items-center space-x-2 cursor-pointer font-semibold">
                             <input type="checkbox" id="p-isNew" class="w-4 h-4 rounded text-tan">
-                            <span>Sản phẩm Mới</span>
+                            <span>Sản phẩm Mới (Is New)</span>
                         </label>
                         <label class="flex items-center space-x-2 cursor-pointer font-semibold">
                             <input type="checkbox" id="p-isBestseller" class="w-4 h-4 rounded text-tan">
-                            <span>Sản phẩm Bán Chạy</span>
+                            <span>Sản phẩm Bán Chạy (Is Bestseller)</span>
                         </label>
                     </div>
                 </div>
 
+                <!-- 2. SPECS CHI TIẾT SẢN PHẨM -->
+                <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                    <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-tan"></i> 2. Thông Số Chi Tiết (Specs)
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-semibold mb-1">Kích thước (Dimensions)</label>
+                            <textarea id="p-spec-dim" rows="2" placeholder="W:380mm\nD:120mm\nH:420mm" class="w-full p-2.5 rounded-xl border bg-white font-mono"></textarea>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Cấu trúc (Structure)</label>
+                            <textarea id="p-spec-struct" rows="2" placeholder="Canvas 14oz\nQuai da bò" class="w-full p-2.5 rounded-xl border bg-white font-mono"></textarea>
+                        </div>
+                        <div>
+                            <label class="block font-semibold mb-1">Hoàn thiện (Finish)</label>
+                            <textarea id="p-spec-finish" rows="2" placeholder="Mộc tự nhiên" class="w-full p-2.5 rounded-xl border bg-white font-mono"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. BIẾN THỂ MÀU SẮC & HÌNH ẢNH -->
                 <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
                     <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-sm text-cream-900">Biến Thể Màu & Hình Ảnh</h4>
-                        <button type="button" onclick="addColorSwatch()" class="bg-tan text-white font-bold px-3 py-1.5 rounded-xl">+ Thêm Màu</button>
+                        <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
+                            <i class="fa-solid fa-palette text-tan"></i> 3. Biến Thể Màu & Hình Ảnh
+                        </h4>
+                        <button type="button" onclick="addColorSwatch()" class="bg-tan text-white font-bold px-3 py-1.5 rounded-xl hover:bg-cream-900 transition">+ Thêm Màu</button>
                     </div>
                     <div id="color-swatches-container" class="space-y-3"></div>
                 </div>
 
+                <!-- 4. CÂU CHUYỆN THIẾT KẾ (STORY BLOCKS 01, 02, 03) -->
+                <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                    <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-tan"></i> 4. Câu Chuyện Thiết Kế (Story Highlights)
+                    </h4>
+                    
+                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
+                        <span class="font-bold text-tan">Highlight 01</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="p-f1-title" placeholder="Tiêu đề 01..." class="p-2 rounded-lg border">
+                            <input type="text" id="p-f1-img" placeholder="Link ảnh 01..." class="p-2 rounded-lg border">
+                        </div>
+                        <textarea id="p-f1-desc" rows="2" placeholder="Mô tả chi tiết 01..." class="w-full p-2 rounded-lg border"></textarea>
+                    </div>
+
+                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
+                        <span class="font-bold text-tan">Highlight 02</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="p-f2-title" placeholder="Tiêu đề 02..." class="p-2 rounded-lg border">
+                            <input type="text" id="p-f2-img" placeholder="Link ảnh 02..." class="p-2 rounded-lg border">
+                        </div>
+                        <textarea id="p-f2-desc" rows="2" placeholder="Mô tả chi tiết 02..." class="w-full p-2 rounded-lg border"></textarea>
+                    </div>
+
+                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
+                        <span class="font-bold text-tan">Highlight 03</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="p-f3-title" placeholder="Tiêu đề 03..." class="p-2 rounded-lg border">
+                            <input type="text" id="p-f3-img" placeholder="Link ảnh 03..." class="p-2 rounded-lg border">
+                        </div>
+                        <textarea id="p-f3-desc" rows="2" placeholder="Mô tả chi tiết 03..." class="w-full p-2 rounded-lg border"></textarea>
+                    </div>
+                </div>
+
                 <div class="flex justify-end space-x-3 pt-4 border-t border-cream-200">
-                    <button type="button" onclick="closeProductModal()" class="px-5 py-2.5 border rounded-xl">Hủy</button>
-                    <button type="submit" class="px-6 py-2.5 bg-cream-900 text-white rounded-xl font-bold">Lưu Sản Phẩm</button>
+                    <button type="button" onclick="closeProductModal()" class="px-5 py-2.5 border rounded-xl font-semibold">Hủy</button>
+                    <button type="submit" class="px-6 py-2.5 bg-cream-900 text-white rounded-xl font-bold hover:bg-tan transition">Lưu Sản Phẩm</button>
                 </div>
             </form>
         </div>
     </div>
-
     <!-- EXPORT MODAL -->
     <div id="export-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/60 backdrop-blur-sm hidden">
         <div class="bg-white rounded-3xl max-w-3xl w-full p-6 space-y-4 shadow-2xl border border-cream-200">
