@@ -63,6 +63,7 @@
             border-radius: 9999px;
         }
     </style>
+    <script src="js/data.js"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-cream-50 selection:bg-cream-200">
 
@@ -510,7 +511,9 @@
         ];
 
         // LOCAL STORAGE STATE MANAGEMENT
-        let products = JSON.parse(localStorage.getItem('kem_admin_products')) || defaultProducts;
+        let products = (typeof productsData !== 'undefined' && productsData.length > 0) 
+            ? JSON.parse(JSON.stringify(productsData)) 
+            : (JSON.parse(localStorage.getItem('kem_admin_products')) || defaultProducts);
         let reviews = JSON.parse(localStorage.getItem('kem_admin_reviews')) || defaultReviews;
         let editingProductId = null;
 
