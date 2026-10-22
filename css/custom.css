@@ -1,0 +1,36 @@
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #FAF7F2;
+    color: #2C2A29;
+}
+.serif-title { font-family: 'Playfair Display', serif; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #FAF7F2; }
+::-webkit-scrollbar-thumb { background: #D8C7A9; border-radius: 9999px; }
+
+/* Interactive Hover Effects for Category Icons & Cards */
+.category-circle-btn {
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease;
+}
+.category-circle-btn:hover {
+    transform: translateY(-6px) scale(1.05);
+}
+
+.product-card-img {
+    transition: transform 0.5s ease;
+}
+.product-card:hover .product-card-img {
+    transform: scale(1.08);
+}
+
+/* Gallery Thumbnail Active States */
+.gallery-thumb {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+.gallery-thumb:hover, .gallery-thumb.active {
+    border-color: #A67C52;
+    transform: scale(1.05);
+}
