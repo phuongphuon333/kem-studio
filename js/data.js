@@ -200,3 +200,32 @@ let reviewsData = [
         image: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=300&auto=format&fit=crop'
     }
 ];
+// BANNERS & HOMEPAGE CONTENT DATA
+let bannersData = {
+    hero: {
+        tag: "NEW SEASON LOOKBOOK",
+        title: "Wear Your Story.\nExpress Your Style.",
+        description: "Những đường nét tối giản, bảng màu mộc Earth-tone chất lượng vượt thời gian. Định hình phong cách đường phố tinh tế.",
+        image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop",
+        buttonText: "Shop the Collection"
+    },
+    promoLeft: {
+        tag: "ƯU ĐÃI ĐẾN 30%",
+        title: "Minimalist Streetwear",
+        description: "Bộ sưu tập quần túi hộp Utility kết hợp cùng áo khoác phong cách Urban.",
+        image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?q=80&w=800&auto=format&fit=crop",
+        linkCategory: "cargo-pants"
+    },
+    promoRight: {
+        tag: "CRAFTED FOR COMFORT",
+        title: "Premium Canvas Collection",
+        description: "Túi Canvas bền bỉ 14oz với tay cầm bọc da sang trọng.",
+        image: "https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop",
+        linkCategory: "canvas-bag"
+    },
+    story: {
+        tag: "KEM STUDIO PHILOSOPHY",
+        title: "Tinh Tế Trong Từng Đường Kim Mũi Chỉ",
+        description: "Chúng tôi tin rằng cái đẹp nằm ở sự giản đơn. Tất cả mẫu thiết kế túi canvas, áo khoác dù và quần túi hộp tại KEM Studio được nghiên cứu kĩ lưỡng để mang tới tính ứng dụng tối đa cho cuộc sống thường nhật."
+    }
+};
