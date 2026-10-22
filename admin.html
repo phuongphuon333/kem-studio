@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEM Studio - Admin Management Portal</title>
+    
+    <!-- Tailwind CSS & Font Awesome -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: {
+                            50: '#FAF7F2',
+                            100: '#F4EFE6',
+                            200: '#E8DEC9',
+                            300: '#D8C7A9',
+                            400: '#C2A880',
+                            800: '#524332',
+                            900: '#2C2A29',
+                        },
+                        tan: '#A67C52',
+                        mocha: '#8C7A6B',
+                        earth: '#6E5C4F',
+                        darkcharcoal: '#1A1817'
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAF7F2;
+            color: #2C2A29;
+        }
+        .serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF7F2;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D8C7A9;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-cream-50 selection:bg-cream-200">
+
+    <!-- TOP HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-30 bg-cream-900 text-cream-50 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="serif-title text-xl font-bold tracking-wider">KEM <span class="text-xs uppercase font-sans font-light tracking-widest text-tan">Studio</span></span>
+                <span class="bg-tan/30 text-tan text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-tan/30">Admin Dashboard</span>
+            </div>
+
+            <div class="flex items-center space-x-3 text-xs">
+                <button onclick="exportDataJs()" class="bg-tan hover:bg-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-code"></i> Xuất file data.js
+                </button>
+                <button onclick="resetDefaultData()" class="bg-cream-800 hover:bg-cream-700 text-cream-100 font-medium px-3 py-2 rounded-xl transition text-[11px]" title="Khôi phục dữ liệu mẫu ban đầu">
+                    <i class="fa-solid fa-rotate-left"></i> Reset Mẫu
+                </button>
+                <a href="index.html" target="_blank" class="bg-white/10 hover:bg-white/20 text-cream-100 font-medium px-3 py-2 rounded-xl transition text-[11px] flex items-center gap-1">
+                    Xem Web <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN BODY CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- DASHBOARD STATS OVERVIEW -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-mocha uppercase">Tổng Sản Phẩm</span>
+                    <h3 id="stat-total-products" class="serif-title text-3xl font-bold text-cream-900 mt-1">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-cream-100 text-tan flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-mocha uppercase">Sản Phẩm Mới</span>
+                    <h3 id="stat-new-products" class="serif-title text-3xl font-bold text-cream-900 mt-1">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-sparkles"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-mocha uppercase">Sản Phẩm Bán Chạy</span>
+                    <h3 id="stat-bestsellers" class="serif-title text-3xl font-bold text-cream-900 mt-1">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-mocha uppercase">Tổng Đánh Giá</span>
+                    <h3 id="stat-total-reviews" class="serif-title text-3xl font-bold text-cream-900 mt-1">0</h3>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN TABS: PRODUCTS MANAGEMENT vs REVIEWS MANAGEMENT -->
+        <div class="bg-white rounded-3xl p-6 border border-cream-200 shadow-sm space-y-6">
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-cream-200 pb-4">
+                <div class="flex items-center space-x-3">
+                    <button onclick="switchTab('products')" id="tab-btn-products" class="px-5 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-900 text-white flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping"></i> Quản Lý Sản Phẩm
+                    </button>
+                    <button onclick="switchTab('reviews')" id="tab-btn-reviews" class="px-5 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-100 text-cream-900 hover:bg-cream-200 flex items-center gap-2">
+                        <i class="fa-solid fa-comments"></i> Đánh Giá Khách Hàng
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <button onclick="openProductModal()" id="add-product-btn" class="bg-cream-900 hover:bg-tan text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Thêm Sản Phẩm Mới
+                    </button>
+                    <button onclick="openReviewModal()" id="add-review-btn" class="hidden bg-cream-900 hover:bg-tan text-white text-xs font-bold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Thêm Review Mới
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 1: PRODUCT LIST VIEW -->
+            <div id="view-products" class="space-y-4">
+                <!-- Search & Filters -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="relative w-full sm:w-72">
+                        <input type="text" id="product-search" oninput="renderProductsTable()" placeholder="Tìm theo tên hoặc mã SP..." class="w-full pl-9 pr-4 py-2 bg-cream-50 rounded-xl border border-cream-200 text-xs focus:outline-none focus:ring-2 focus:ring-tan">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-cream-400 text-xs"></i>
+                    </div>
+
+                    <div class="flex items-center space-x-2 w-full sm:w-auto">
+                        <select id="category-filter" onchange="renderProductsTable()" class="px-3 py-2 bg-cream-50 rounded-xl border border-cream-200 text-xs font-medium text-cream-900 focus:outline-none focus:ring-2 focus:ring-tan">
+                            <option value="all">Tất cả danh mục</option>
+                            <option value="canvas-bag">Túi Canvas</option>
+                            <option value="jacket">Áo Khoác Dù</option>
+                            <option value="cargo-pants">Quần Túi Hộp</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Product Table -->
+                <div class="overflow-x-auto rounded-2xl border border-cream-200">
+                    <table class="w-full text-left text-xs text-cream-900">
+                        <thead class="bg-cream-100 text-cream-800 uppercase font-semibold text-[10px] tracking-wider border-b border-cream-200">
+                            <tr>
+                                <th class="p-4">Sản Phẩm</th>
+                                <th class="p-4">Danh Mục</th>
+                                <th class="p-4">Giá Bán</th>
+                                <th class="p-4">Biến Thể Màu</th>
+                                <th class="p-4">Trạng Thái</th>
+                                <th class="p-4 text-right">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-table-body" class="divide-y divide-cream-100">
+                            <!-- JS Rendered -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION 2: REVIEWS LIST VIEW -->
+            <div id="view-reviews" class="hidden space-y-4">
+                <div class="overflow-x-auto rounded-2xl border border-cream-200">
+                    <table class="w-full text-left text-xs text-cream-900">
+                        <thead class="bg-cream-100 text-cream-800 uppercase font-semibold text-[10px] tracking-wider border-b border-cream-200">
+                            <tr>
+                                <th class="p-4">Khách Hàng</th>
+                                <th class="p-4">Sản Phẩm Đã Mua</th>
+                                <th class="p-4">Đánh Giá</th>
+                                <th class="p-4">Nhận Xét</th>
+                                <th class="p-4">Thời Gian</th>
+                                <th class="p-4 text-right">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviews-table-body" class="divide-y divide-cream-100">
+                            <!-- JS Rendered -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL 1: ADD / EDIT PRODUCT FORM -->
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/50 backdrop-blur-sm hidden overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-4xl w-full my-8 p-6 sm:p-8 space-y-6 shadow-2xl border border-cream-200 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-cream-200 pb-4">
+                <h3 id="modal-product-title" class="serif-title text-2xl font-bold text-cream-900">Thêm Sản Phẩm Mới</h3>
+                <button onclick="closeProductModal()" class="text-cream-800 hover:text-cream-900 p-2">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-6 text-xs">
+                
+                <!-- 1. THÔNG TIN CƠ BẢN -->
+                <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                    <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-tan"></i> Thông Tin Cơ Bản
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-semibold text-cream-800 mb-1">Mã SP (ID) *</label>
+                            <input type="text" id="p-id" required placeholder="vd: bag-03" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white font-mono">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block font-semibold text-cream-800 mb-1">Tên Sản Phẩm *</label>
+                            <input type="text" id="p-name" required placeholder="vd: Túi Canvas Grand Studio Tote" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white font-semibold">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-semibold text-cream-800 mb-1">Danh Mục *</label>
+                            <select id="p-category" onchange="updateCategoryLabel()" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white">
+                                <option value="canvas-bag">Túi Canvas</option>
+                                <option value="jacket">Áo Khoác Dù</option>
+                                <option value="cargo-pants">Quần Túi Hộp</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-cream-800 mb-1">Giá Bán (VNĐ dạng số) *</label>
+                            <input type="number" id="p-price" required placeholder="450000" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-cream-800 mb-1">Badge Nổi Bật</label>
+                            <input type="text" id="p-badge" placeholder="vd: grand, essential" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-6 pt-2">
+                        <label class="flex items-center space-x-2 cursor-pointer font-semibold">
+                            <input type="checkbox" id="p-isNew" class="w-4 h-4 rounded text-tan focus:ring-tan">
+                            <span>Sản phẩm Mới (Is New)</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer font-semibold">
+                            <input type="checkbox" id="p-isBestseller" class="w-4 h-4 rounded text-tan focus:ring-tan">
+                            <span>Sản phẩm Bán Chạy (Is Bestseller)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 2. THÔNG SỐ KỸ THUẬT (SPECS) -->
+                <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                    <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-tan"></i> Thông Số Kỹ Thuật (Specs)
+                    </h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block font-semibold text-cream-800 mb-1">Kích thước (Dimensions)</label>
+                            <textarea id="p-spec-dim" rows="2" placeholder="W:380mm\nD:120mm\nH:420mm" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white font-mono"></textarea>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-cream-800 mb-1">Cấu trúc (Structure)</label>
+                            <textarea id="p-spec-struct" rows="2" placeholder="Canvas 14oz\nQuai da bò" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white font-mono"></textarea>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-cream-800 mb-1">Hoàn thiện (Finish)</label>
+                            <textarea id="p-spec-finish" rows="2" placeholder="Mộc tự nhiên" class="w-full p-2.5 rounded-xl border border-cream-200 bg-white font-mono"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. QUẢN LÝ MÀU SẮC & HÌNH ẢNH (COLOR SWATCHES) -->
+                <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
+                            <i class="fa-solid fa-palette text-tan"></i> Biến Thể Màu & Hình Ảnh
+                        </h4>
+                        <button type="button" onclick="addColorSwatch()" class="bg-tan hover:bg-cream-900 text-white font-bold px-3 py-1.5 rounded-xl transition">
+                            + Thêm Màu
+                        </button>
+                    </div>
+                    
+                    <div id="color-swatches-container" class="space-y-3">
+                        <!-- JS Dynamic Color Items -->
+                    </div>
+                </div>
+
+                <!-- 4. BÀI VIẾT CÂU CHUYỆN THIẾT KẾ (STORY BLOCKS 01, 02, 03) -->
+                <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
+                    <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-tan"></i> Câu Chuyện Thiết Kế (Story Highlights)
+                    </h4>
+                    
+                    <!-- Feature 1 -->
+                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
+                        <span class="font-bold text-tan">Highlight 01</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="p-f1-title" placeholder="Tiêu đề 01..." class="p-2 rounded-lg border border-cream-200">
+                            <input type="text" id="p-f1-img" placeholder="Link ảnh hoặc images/..." class="p-2 rounded-lg border border-cream-200">
+                        </div>
+                        <textarea id="p-f1-desc" rows="2" placeholder="Mô tả chi tiết 01..." class="w-full p-2 rounded-lg border border-cream-200"></textarea>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
+                        <span class="font-bold text-tan">Highlight 02</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="p-f2-title" placeholder="Tiêu đề 02..." class="p-2 rounded-lg border border-cream-200">
+                            <input type="text" id="p-f2-img" placeholder="Link ảnh hoặc images/..." class="p-2 rounded-lg border border-cream-200">
+                        </div>
+                        <textarea id="p-f2-desc" rows="2" placeholder="Mô tả chi tiết 02..." class="w-full p-2 rounded-lg border border-cream-200"></textarea>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
+                        <span class="font-bold text-tan">Highlight 03</span>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="p-f3-title" placeholder="Tiêu đề 03..." class="p-2 rounded-lg border border-cream-200">
+                            <input type="text" id="p-f3-img" placeholder="Link ảnh hoặc images/..." class="p-2 rounded-lg border border-cream-200">
+                        </div>
+                        <textarea id="p-f3-desc" rows="2" placeholder="Mô tả chi tiết 03..." class="w-full p-2 rounded-lg border border-cream-200"></textarea>
+                    </div>
+                </div>
+
+                <!-- SUBMIT BUTTONS -->
+                <div class="flex justify-end space-x-3 pt-4 border-t border-cream-200">
+                    <button type="button" onclick="closeProductModal()" class="px-5 py-2.5 rounded-xl border border-cream-300 font-semibold text-cream-800 hover:bg-cream-100 transition">Hủy</button>
+                    <button type="submit" class="px-6 py-2.5 bg-cream-900 text-white rounded-xl font-bold hover:bg-tan transition shadow-md">Lưu Sản Phẩm</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: ADD / EDIT REVIEW FORM -->
+    <div id="review-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/50 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl border border-cream-200">
+            <div class="flex justify-between items-center border-b border-cream-200 pb-3">
+                <h3 id="modal-review-title" class="serif-title text-xl font-bold text-cream-900">Thêm Đánh Giá Mới</h3>
+                <button onclick="closeReviewModal()" class="text-cream-800 hover:text-cream-900">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="review-form" onsubmit="saveReview(event)" class="space-y-4 text-xs">
+                <input type="hidden" id="rev-id">
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Tên khách hàng *</label>
+                    <input type="text" id="rev-author" required placeholder="Minh Thảo" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50">
+                </div>
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Sản phẩm mua *</label>
+                    <input type="text" id="rev-product" required placeholder="Túi Canvas Grand Studio Tote" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50">
+                </div>
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Số sao đánh giá *</label>
+                    <select id="rev-stars" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50 font-bold text-amber-600">
+                        <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                        <option value="3">⭐⭐⭐ (3/5)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Thời gian</label>
+                    <input type="text" id="rev-date" placeholder="2 ngày trước" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50">
+                </div>
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Nội dung nhận xét *</label>
+                    <textarea id="rev-comment" required rows="3" placeholder="Viết bình luận..." class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" onclick="closeReviewModal()" class="px-4 py-2 rounded-xl border border-cream-300 font-semibold text-cream-800">Hủy</button>
+                    <button type="submit" class="px-5 py-2 bg-cream-900 text-white rounded-xl font-bold hover:bg-tan transition">Lưu Đánh Giá</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: EXPORT JS CODE POPUP -->
+    <div id="export-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 space-y-4 shadow-2xl border border-cream-200">
+            <div class="flex justify-between items-center border-b border-cream-200 pb-3">
+                <div>
+                    <h3 class="serif-title text-xl font-bold text-cream-900">Mã Nguồn Cập Nhật `js/data.js`</h3>
+                    <p class="text-xs text-mocha">Copy đoạn mã bên dưới và dán đè vào file `js/data.js` trong thư mục dự án của Kem</p>
+                </div>
+                <button onclick="closeExportModal()" class="text-cream-800 hover:text-cream-900">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="relative">
+                <textarea id="export-code-area" readonly rows="14" class="w-full p-4 font-mono text-[11px] bg-cream-900 text-cream-100 rounded-2xl border border-cream-800 focus:outline-none selection:bg-tan selection:text-white"></textarea>
+            </div>
+
+            <div class="flex justify-between items-center pt-2">
+                <span class="text-xs text-emerald-700 font-semibold"><i class="fa-solid fa-circle-check"></i> Đã tối ưu cú pháp JavaScript</span>
+                <div class="flex space-x-3">
+                    <button onclick="copyExportCode()" class="px-5 py-2.5 bg-tan text-white rounded-xl font-bold text-xs hover:bg-cream-900 transition flex items-center gap-2">
+                        <i class="fa-regular fa-copy"></i> Sao Chép Mã
+                    </button>
+                    <button onclick="downloadDataJs()" class="px-5 py-2.5 bg-cream-900 text-white rounded-xl font-bold text-xs hover:bg-tan transition flex items-center gap-2">
+                        <i class="fa-solid fa-download"></i> Tải File data.js
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-cream-900 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-msg" class="text-xs font-semibold">Thông báo!</span>
+    </div>
+
+    <!-- APPLICATION CONTROLLER SCRIPT -->
+    <script>
+        // DEFAULT INITIAL SEED DATA
+        const defaultProducts = [
+            {
+                id: 'bag-01',
+                name: 'Túi Canvas Grand Studio Tote',
+                category: 'canvas-bag',
+                categoryLabel: 'Túi Canvas',
+                price: 450000,
+                priceFormatted: '450.000 đ',
+                badge: 'grand',
+                rating: 5.0,
+                reviewsCount: 84,
+                isNew: true,
+                isBestseller: true,
+                colors: [
+                    { name: 'Khaki Beige', hex: '#E2D3C1', image: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop' },
+                    { name: 'Warm Taupe', hex: '#8C7A6B', image: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=800&auto=format&fit=crop' }
+                ],
+                specs: { dimensions: 'W:380mm\nD:120mm\nH:420mm', structure: 'Canvas 14oz\nQuai da bò', finish: 'Mộc tự nhiên' },
+                story: {
+                    feat1Title: 'Engineered for Daily Utility', feat1Desc: 'Vải Canvas 14oz mật độ cao chống sờn rách.', feat1Img: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=800&auto=format&fit=crop',
+                    feat2Title: 'Water-Repellent', feat2Desc: 'Ngăn chống sốc Laptop 15.6 inch.', feat2Img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=800&auto=format&fit=crop',
+                    feat3Title: 'Minimalist Silhouette', feat3Desc: 'Phom đứng dáng gọn gàng.', feat3Img: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop'
+                },
+                pairings: [
+                    { title: 'Chính diện', img: 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=400&auto=format&fit=crop' },
+                    { title: 'Góc nghiêng', img: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=400&auto=format&fit=crop' }
+                ]
+            },
+            {
+                id: 'jacket-01',
+                name: 'Áo Khoác Dù Essential Windbreaker',
+                category: 'jacket',
+                categoryLabel: 'Áo Khoác Dù',
+                price: 680000,
+                priceFormatted: '680.000 đ',
+                badge: 'essential',
+                rating: 4.9,
+                reviewsCount: 112,
+                isNew: true,
+                isBestseller: true,
+                colors: [
+                    { name: 'Sand Cream', hex: '#EFE6D5', image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop' }
+                ],
+                specs: { dimensions: 'Size: S, M, L, XL', structure: 'Vải dù Microfiber', finish: 'Trượt nước' },
+                story: {
+                    feat1Title: 'Breathable Material', feat1Desc: 'Thoáng khí không gây hầm nóng.', feat1Img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop',
+                    feat2Title: 'Water Repellent', feat2Desc: 'Chống bám bụi và mưa nhẹ.', feat2Img: 'https://images.unsplash.com/photo-1548883354-7622d03aca27?q=80&w=800&auto=format&fit=crop',
+                    feat3Title: 'Urban Fit', feat3Desc: 'Phom Boxy rộng rãi.', feat3Img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800&auto=format&fit=crop'
+                },
+                pairings: [
+                    { title: 'Xem chi tiết', img: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400&auto=format&fit=crop' }
+                ]
+            }
+        ];
+
+        const defaultReviews = [
+            { id: 'rev-1', author: 'Minh Thảo', productBought: 'Túi Canvas Grand Studio Tote', category: 'canvas-bag', stars: 5, date: '2 ngày trước', comment: 'Túi siêu dày dặn, phom đứng rất đẹp. Đựng vừa laptop 15.6 inch!' },
+            { id: 'rev-2', author: 'Hoàng Nam', productBought: 'Áo Khoác Dù Essential Windbreaker', category: 'jacket', stars: 5, date: '1 tuần trước', comment: 'Áo đi mưa nhẹ rất ổn, nước trượt hạt sen luôn.' }
+        ];
+
+        // LOCAL STORAGE STATE MANAGEMENT
+        let products = JSON.parse(localStorage.getItem('kem_admin_products')) || defaultProducts;
+        let reviews = JSON.parse(localStorage.getItem('kem_admin_reviews')) || defaultReviews;
+        let editingProductId = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            updateDashboardStats();
+            renderProductsTable();
+            renderReviewsTable();
+        });
+
+        function saveData() {
+            localStorage.setItem('kem_admin_products', JSON.stringify(products));
+            localStorage.setItem('kem_admin_reviews', JSON.stringify(reviews));
+            updateDashboardStats();
+        }
+
+        function updateDashboardStats() {
+            document.getElementById('stat-total-products').innerText = products.length;
+            document.getElementById('stat-new-products').innerText = products.filter(p => p.isNew).length;
+            document.getElementById('stat-bestsellers').innerText = products.filter(p => p.isBestseller).length;
+            document.getElementById('stat-total-reviews').innerText = reviews.length;
+        }
+
+        function switchTab(tab) {
+            const btnProducts = document.getElementById('tab-btn-products');
+            const btnReviews = document.getElementById('tab-btn-reviews');
+            const viewProducts = document.getElementById('view-products');
+            const viewReviews = document.getElementById('view-reviews');
+            const addProductBtn = document.getElementById('add-product-btn');
+            const addReviewBtn = document.getElementById('add-review-btn');
+
+            if (tab === 'products') {
+                btnProducts.className = "px-5 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-900 text-white flex items-center gap-2";
+                btnReviews.className = "px-5 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-100 text-cream-900 hover:bg-cream-200 flex items-center gap-2";
+                viewProducts.classList.remove('hidden');
+                viewReviews.classList.add('hidden');
+                addProductBtn.classList.remove('hidden');
+                addReviewBtn.classList.add('hidden');
+            } else {
+                btnReviews.className = "px-5 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-900 text-white flex items-center gap-2";
+                btnProducts.className = "px-5 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-100 text-cream-900 hover:bg-cream-200 flex items-center gap-2";
+                viewReviews.classList.remove('hidden');
+                viewProducts.classList.add('hidden');
+                addReviewBtn.classList.remove('hidden');
+                addProductBtn.classList.add('hidden');
+            }
+        }
+
+        // RENDER PRODUCTS TABLE
+        function renderProductsTable() {
+            const tbody = document.getElementById('products-table-body');
+            const query = document.getElementById('product-search').value.toLowerCase();
+            const catFilter = document.getElementById('category-filter').value;
+
+            const filtered = products.filter(p => {
+                const matchSearch = p.name.toLowerCase().includes(query) || p.id.toLowerCase().includes(query);
+                const matchCat = catFilter === 'all' || p.category === catFilter;
+                return matchSearch && matchCat;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-mocha font-medium">Không tìm thấy sản phẩm nào matching.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(p => {
+                const mainImg = p.colors[0]?.image || 'https://via.placeholder.com/80';
+                return `
+                    <tr class="hover:bg-cream-50/80 transition">
+                        <td class="p-4 flex items-center space-x-3">
+                            <img src="${mainImg}" class="w-12 h-12 rounded-xl object-cover bg-cream-100 border border-cream-200">
+                            <div>
+                                <h4 class="font-bold text-cream-900 hover:text-tan transition cursor-pointer" onclick="openProductModal('${p.id}')">${p.name}</h4>
+                                <span class="font-mono text-[10px] text-cream-400">ID: ${p.id}</span>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <span class="px-2.5 py-1 rounded-full bg-cream-100 font-semibold text-[10px] text-cream-800">${p.categoryLabel}</span>
+                        </td>
+                        <td class="p-4 font-bold text-cream-900">${p.priceFormatted}</td>
+                        <td class="p-4">
+                            <div class="flex items-center space-x-1.5">
+                                ${p.colors.map(c => `<span class="w-4 h-4 rounded-full border border-white shadow-sm" style="background-color: ${c.hex};" title="${c.name}"></span>`).join('')}
+                                <span class="text-[10px] text-mocha font-medium">(${p.colors.length})</span>
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <div class="flex flex-wrap gap-1">
+                                ${p.isNew ? `<span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full">MỚI</span>` : ''}
+                                ${p.isBestseller ? `<span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full">HOT</span>` : ''}
+                            </div>
+                        </td>
+                        <td class="p-4 text-right space-x-2">
+                            <button onclick="openProductModal('${p.id}')" class="p-2 text-cream-800 hover:text-tan transition" title="Chỉnh sửa"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="duplicateProduct('${p.id}')" class="p-2 text-cream-800 hover:text-blue-600 transition" title="Nhân bản"><i class="fa-regular fa-copy"></i></button>
+                            <button onclick="deleteProduct('${p.id}')" class="p-2 text-cream-800 hover:text-red-500 transition" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // RENDER REVIEWS TABLE
+        function renderReviewsTable() {
+            const tbody = document.getElementById('reviews-table-body');
+            tbody.innerHTML = reviews.map(r => `
+                <tr class="hover:bg-cream-50/80 transition">
+                    <td class="p-4 font-bold text-cream-900">${r.author}</td>
+                    <td class="p-4 font-medium text-cream-800">${r.productBought}</td>
+                    <td class="p-4 text-amber-500">★★★★★</td>
+                    <td class="p-4 max-w-xs truncate text-cream-800" title="${r.comment}">${r.comment}</td>
+                    <td class="p-4 text-mocha">${r.date}</td>
+                    <td class="p-4 text-right space-x-1">
+                        <button onclick="deleteReview('${r.id}')" class="p-2 text-cream-800 hover:text-red-500 transition"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // PRODUCT MODAL LOGIC & SWATCH DYNAMICS
+        function openProductModal(productId = null) {
+            editingProductId = productId;
+            const container = document.getElementById('color-swatches-container');
+            container.innerHTML = '';
+
+            if (productId) {
+                const p = products.find(item => item.id === productId);
+                document.getElementById('modal-product-title').innerText = "Chỉnh Sửa Sản Phẩm";
+                document.getElementById('p-id').value = p.id;
+                document.getElementById('p-id').readOnly = true;
+                document.getElementById('p-name').value = p.name;
+                document.getElementById('p-category').value = p.category;
+                document.getElementById('p-price').value = p.price;
+                document.getElementById('p-badge').value = p.badge || '';
+                document.getElementById('p-isNew').checked = !!p.isNew;
+                document.getElementById('p-isBestseller').checked = !!p.isBestseller;
+
+                document.getElementById('p-spec-dim').value = p.specs?.dimensions || '';
+                document.getElementById('p-spec-struct').value = p.specs?.structure || '';
+                document.getElementById('p-spec-finish').value = p.specs?.finish || '';
+
+                if (p.colors && p.colors.length > 0) {
+                    p.colors.forEach(c => addColorSwatch(c.name, c.hex, c.image));
+                } else {
+                    addColorSwatch();
+                }
+
+                document.getElementById('p-f1-title').value = p.story?.feat1Title || '';
+                document.getElementById('p-f1-img').value = p.story?.feat1Img || '';
+                document.getElementById('p-f1-desc').value = p.story?.feat1Desc || '';
+
+                document.getElementById('p-f2-title').value = p.story?.feat2Title || '';
+                document.getElementById('p-f2-img').value = p.story?.feat2Img || '';
+                document.getElementById('p-f2-desc').value = p.story?.feat2Desc || '';
+
+                document.getElementById('p-f3-title').value = p.story?.feat3Title || '';
+                document.getElementById('p-f3-img').value = p.story?.feat3Img || '';
+                document.getElementById('p-f3-desc').value = p.story?.feat3Desc || '';
+            } else {
+                document.getElementById('modal-product-title').innerText = "Thêm Sản Phẩm Mới";
+                document.getElementById('product-form').reset();
+                document.getElementById('p-id').readOnly = false;
+                document.getElementById('p-id').value = 'bag-' + String(products.length + 1).padStart(2, '0');
+                addColorSwatch('Default Color', '#8C7A6B', 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop');
+            }
+
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function addColorSwatch(name = '', hex = '#8C7A6B', image = '') {
+            const container = document.getElementById('color-swatches-container');
+            const div = document.createElement('div');
+            div.className = "color-item p-3 bg-white rounded-xl border border-cream-200 flex flex-col sm:flex-row items-center gap-3";
+            div.innerHTML = `
+                <input type="color" value="${hex}" class="w-8 h-8 rounded border-0 cursor-pointer flex-shrink-0">
+                <input type="text" placeholder="Tên màu (vd: Sand Cream)" value="${name}" class="swatch-name w-full sm:w-1/3 p-2 rounded-lg border border-cream-200">
+                <input type="text" placeholder="Link ảnh (https://... hoặc images/...)" value="${image}" class="swatch-img w-full flex-1 p-2 rounded-lg border border-cream-200">
+                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 p-2 hover:bg-red-50 rounded-lg"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        function saveProduct(e) {
+            e.preventDefault();
+            const id = document.getElementById('p-id').value.trim();
+            const name = document.getElementById('p-name').value.trim();
+            const category = document.getElementById('p-category').value;
+            const price = parseInt(document.getElementById('p-price').value) || 0;
+            const formattedPrice = price.toLocaleString('vi-VN') + ' đ';
+
+            const catLabels = { 'canvas-bag': 'Túi Canvas', 'jacket': 'Áo Khoác Dù', 'cargo-pants': 'Quần Túi Hộp' };
+
+            // Collect Color Swatches
+            const colorDivs = document.querySelectorAll('#color-swatches-container .color-item');
+            const colors = [];
+            colorDivs.forEach(div => {
+                const hex = div.querySelector('input[type="color"]').value;
+                const cName = div.querySelector('.swatch-name').value.trim() || 'Màu sắc';
+                const cImg = div.querySelector('.swatch-img').value.trim() || 'https://via.placeholder.com/800';
+                colors.push({ name: cName, hex: hex, image: cImg });
+            });
+
+            const productObj = {
+                id,
+                name,
+                category,
+                categoryLabel: catLabels[category] || 'Sản Phẩm',
+                price,
+                priceFormatted: formattedPrice,
+                badge: document.getElementById('p-badge').value.trim() || 'essential',
+                rating: 5.0,
+                reviewsCount: 1,
+                isNew: document.getElementById('p-isNew').checked,
+                isBestseller: document.getElementById('p-isBestseller').checked,
+                colors,
+                specs: {
+                    dimensions: document.getElementById('p-spec-dim').value,
+                    structure: document.getElementById('p-spec-struct').value,
+                    finish: document.getElementById('p-spec-finish').value
+                },
+                story: {
+                    feat1Title: document.getElementById('p-f1-title').value || 'High Quality Design',
+                    feat1Desc: document.getElementById('p-f1-desc').value || 'Mô tả tính năng chi tiết 1.',
+                    feat1Img: document.getElementById('p-f1-img').value || colors[0]?.image,
+
+                    feat2Title: document.getElementById('p-f2-title').value || 'Durable & Utility',
+                    feat2Desc: document.getElementById('p-f2-desc').value || 'Mô tả tính năng chi tiết 2.',
+                    feat2Img: document.getElementById('p-f2-img').value || colors[0]?.image,
+
+                    feat3Title: document.getElementById('p-f3-title').value || 'Minimalist Style',
+                    feat3Desc: document.getElementById('p-f3-desc').value || 'Mô tả tính năng chi tiết 3.',
+                    feat3Img: document.getElementById('p-f3-img').value || colors[0]?.image
+                },
+                pairings: [
+                    { title: 'Góc nhìn chính', img: colors[0]?.image },
+                    { title: 'Phối đồ thực tế', img: colors[1]?.image || colors[0]?.image }
+                ]
+            };
+
+            const index = products.findIndex(p => p.id === id);
+            if (index >= 0) {
+                products[index] = productObj;
+                showToast("Đã cập nhật sản phẩm thành công!");
+            } else {
+                products.push(productObj);
+                showToast("Đã thêm sản phẩm mới!");
+            }
+
+            saveData();
+            renderProductsTable();
+            closeProductModal();
+        }
+
+        function deleteProduct(id) {
+            if (confirm(`Bạn có chắc muốn xóa sản phẩm ${id} không?`)) {
+                products = products.filter(p => p.id !== id);
+                saveData();
+                renderProductsTable();
+                showToast("Đã xóa sản phẩm!");
+            }
+        }
+
+        function duplicateProduct(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+            const dup = JSON.parse(JSON.stringify(p));
+            dup.id = dup.id + '-copy-' + Date.now().toString().slice(-4);
+            dup.name = dup.name + ' (Copy)';
+            products.push(dup);
+            saveData();
+            renderProductsTable();
+            showToast("Đã nhân bản sản phẩm!");
+        }
+
+        // REVIEWS MODAL & ACTIONS
+        function openReviewModal() {
+            document.getElementById('review-form').reset();
+            document.getElementById('review-modal').classList.remove('hidden');
+        }
+
+        function closeReviewModal() {
+            document.getElementById('review-modal').classList.add('hidden');
+        }
+
+        function saveReview(e) {
+            e.preventDefault();
+            reviews.unshift({
+                id: 'rev-' + Date.now(),
+                author: document.getElementById('rev-author').value,
+                productBought: document.getElementById('rev-product').value,
+                stars: parseInt(document.getElementById('rev-stars').value),
+                date: document.getElementById('rev-date').value || 'Vừa xong',
+                comment: document.getElementById('rev-comment').value
+            });
+            saveData();
+            renderReviewsTable();
+            closeReviewModal();
+            showToast("Đã thêm đánh giá!");
+        }
+
+        function deleteReview(id) {
+            if (confirm("Xóa nhận xét này?")) {
+                reviews = reviews.filter(r => r.id !== id);
+                saveData();
+                renderReviewsTable();
+                showToast("Đã xóa nhận xét!");
+            }
+        }
+
+        // EXPORT JS/DATA.JS CODE GENERATOR
+        function exportDataJs() {
+            const code = `// ==========================================
+// KEM STUDIO - AUTOMATIC DATA STORE
+// Rendered via Admin Portal on ${new Date().toLocaleDateString('vi-VN')}
+// ==========================================
+
+const productsData = ${JSON.stringify(products, null, 4)};
+
+let reviewsData = ${JSON.stringify(reviews, null, 4)};
+`;
+            document.getElementById('export-code-area').value = code;
+            document.getElementById('export-modal').classList.remove('hidden');
+        }
+
+        function closeExportModal() {
+            document.getElementById('export-modal').classList.add('hidden');
+        }
+
+        function copyExportCode() {
+            const area = document.getElementById('export-code-area');
+            area.select();
+            document.execCommand('copy');
+            showToast("Đã sao chép mã! Hãy dán đè vào js/data.js");
+        }
+
+        function downloadDataJs() {
+            const code = document.getElementById('export-code-area').value;
+            const blob = new Blob([code], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.js';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("File data.js đang được tải xuống!");
+        }
+
+        function resetDefaultData() {
+            if (confirm("Khôi phục về dữ liệu sản phẩm gốc? Tất cả sản phẩm bạn tạo thêm sẽ bị xóa.")) {
+                products = defaultProducts;
+                reviews = defaultReviews;
+                saveData();
+                renderProductsTable();
+                renderReviewsTable();
+                showToast("Đã reset về dữ liệu mẫu!");
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
