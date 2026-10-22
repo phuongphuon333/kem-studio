@@ -13,17 +13,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS & Tailwind Config -->
+
+    <!-- Linked External Config & Styles -->
     <script src="css/tailwind-config.js"></script>
     <link rel="stylesheet" href="css/custom.css">
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-cream-200">
 
-    <!-- ANNOUNCEMENT BAR & HEADER -->
+    <!-- TOP ANNOUNCEMENT BAR -->
     <div class="bg-cream-900 text-cream-50 text-[11px] sm:text-xs py-2 px-4 font-medium tracking-wide">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <p class="mx-auto sm:mx-0 text-center">✨ Miễn phí vận chuyển cho đơn hàng từ 500k • Thời trang tối giản & Bền vững</p>
+            <p class="mx-auto sm:mx-0 text-center">
+                ✨ Miễn phí vận chuyển cho đơn hàng từ 500k • Thời trang tối giản & Bền vững
+            </p>
             <div class="hidden sm:flex items-center space-x-6 text-cream-200 text-[11px]">
                 <a href="#" onclick="showSection('reviews'); return false;" class="hover:text-white transition">Đánh giá khách hàng</a>
                 <span>|</span>
@@ -32,62 +34,574 @@
         </div>
     </div>
 
+    <!-- MAIN HEADER / NAVBAR -->
     <header class="sticky top-0 z-40 bg-cream-50/95 backdrop-blur-md border-b border-cream-200 transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-            <button onclick="toggleMobileMenu()" class="lg:hidden text-cream-900 p-2 hover:scale-110 active:scale-95 transition">
+
+            <!-- Mobile Menu Toggle Button -->
+            <button onclick="toggleMobileMenu()" class="lg:hidden text-cream-900 p-2 focus:outline-none">
                 <i class="fa-solid fa-bars-staggered text-xl"></i>
             </button>
+
+            <!-- Brand Logo -->
             <a href="#" onclick="showSection('home'); return false;" class="serif-title text-2xl sm:text-3xl font-bold tracking-wider text-cream-900 hover:opacity-80 transition flex-shrink-0">
                 KEM <span class="text-xs tracking-widest font-sans font-light uppercase block sm:inline text-tan">Studio</span>
             </a>
+
+            <!-- Search Bar -->
             <div class="hidden md:flex flex-1 max-w-md mx-4 relative">
                 <input type="text" id="global-search-input" onkeyup="handleSearch(event)" placeholder="Tìm kiếm túi canvas, áo khoác, quần túi hộp..." class="w-full pl-4 pr-10 py-2 rounded-full border border-cream-200 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-tan/50 transition">
                 <button onclick="executeSearch()" class="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-cream-900 text-white flex items-center justify-center text-xs hover:bg-tan transition">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </div>
+
+            <!-- Header Actions -->
             <div class="flex items-center space-x-3 sm:space-x-5">
-                <button onclick="toggleWishlistDrawer()" class="relative p-2 text-cream-900 hover:text-tan transition hover:scale-110">
+                <button onclick="showSection('reviews')" class="hidden sm:flex items-center gap-1 text-xs font-semibold text-cream-900 hover:text-tan transition" title="Đánh giá">
+                    <i class="fa-regular fa-star text-base"></i>
+                </button>
+                <button onclick="toggleWishlistDrawer()" class="relative p-2 text-cream-900 hover:text-tan transition" title="Yêu thích">
                     <i class="fa-regular fa-heart text-xl"></i>
                     <span id="wishlist-badge" class="absolute top-0 right-0 bg-tan text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
                 </button>
-                <button onclick="toggleCartDrawer()" class="relative p-2 text-cream-900 hover:text-tan transition hover:scale-110">
+                <button onclick="toggleCartDrawer()" class="relative p-2 text-cream-900 hover:text-tan transition" title="Túi hàng">
                     <i class="fa-solid fa-bag-shopping text-xl"></i>
                     <span id="cart-badge" class="absolute top-0 right-0 bg-cream-900 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
                 </button>
             </div>
         </div>
+
+        <!-- Desktop Navigation Bar -->
         <nav class="hidden lg:block border-t border-cream-200/60 bg-cream-100/50">
             <div class="max-w-7xl mx-auto px-8 flex items-center justify-center space-x-10 h-10 text-xs font-semibold tracking-wider uppercase">
-                <button onclick="showSection('home')" class="nav-link">Trang Chủ</button>
-                <button onclick="showSection('shop', 'all')" class="nav-link">Tất Cả Sản Phẩm</button>
-                <button onclick="showSection('shop', 'canvas-bag')" class="nav-link">Túi Canvas</button>
-                <button onclick="showSection('shop', 'jacket')" class="nav-link">Áo Khoác Dù</button>
-                <button onclick="showSection('shop', 'cargo-pants')" class="nav-link">Quần Túi Hộp</button>
-                <button onclick="showSection('reviews')" class="nav-link text-tan">Review Khách Hàng ⭐</button>
+                <button onclick="showSection('home')" class="nav-link hover:text-tan transition">Trang Chủ</button>
+                <button onclick="showSection('shop', 'all')" class="nav-link hover:text-tan transition">Tất Cả Sản Phẩm</button>
+                <button onclick="showSection('shop', 'canvas-bag')" class="nav-link hover:text-tan transition">Túi Canvas</button>
+                <button onclick="showSection('shop', 'jacket')" class="nav-link hover:text-tan transition">Áo Khoác Dù</button>
+                <button onclick="showSection('shop', 'cargo-pants')" class="nav-link hover:text-tan transition">Quần Túi Hộp</button>
+                <button onclick="showSection('reviews')" class="nav-link hover:text-tan transition text-tan">Review Khách Hàng ⭐</button>
             </div>
         </nav>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-cream-50 border-b border-cream-200 px-6 py-4 space-y-3">
+            <div class="relative mb-3">
+                <input type="text" placeholder="Tìm kiếm sản phẩm..." class="w-full px-4 py-2 rounded-full border border-cream-200 text-xs bg-white">
+            </div>
+            <button onclick="showSection('home'); toggleMobileMenu()" class="block w-full text-left py-2 font-medium text-cream-900">Trang Chủ</button>
+            <button onclick="showSection('shop', 'all'); toggleMobileMenu()" class="block w-full text-left py-2 font-medium text-cream-900">Tất Cả Sản Phẩm</button>
+            <button onclick="showSection('shop', 'canvas-bag'); toggleMobileMenu()" class="block w-full text-left py-2 text-xs pl-4 text-cream-800">Túi Canvas</button>
+            <button onclick="showSection('shop', 'jacket'); toggleMobileMenu()" class="block w-full text-left py-2 text-xs pl-4 text-cream-800">Áo Khoác Dù</button>
+            <button onclick="showSection('shop', 'cargo-pants'); toggleMobileMenu()" class="block w-full text-left py-2 text-xs pl-4 text-cream-800">Quần Túi Hộp</button>
+            <button onclick="showSection('reviews'); toggleMobileMenu()" class="block w-full text-left py-2 font-medium text-tan">Đánh Giá Khách Hàng</button>
+        </div>
     </header>
 
+    <!-- MAIN APP CONTENT VIEWPORT -->
     <main class="flex-grow">
-        <!-- Section Home, Shop, Detail, Reviews giữ nguyên cấu trúc container -->
-        <section id="section-home" class="space-y-12 pb-16"><!-- Content injected via JS --></section>
-        <section id="section-shop" class="hidden py-8"><!-- Content injected via JS --></section>
-        <section id="section-detail" class="hidden py-8 sm:py-12"><!-- Content injected via JS --></section>
-        <section id="section-reviews" class="hidden py-10"><!-- Content injected via JS --></section>
+
+        <!-- ================= SECTION 1: HOME PAGE ================= -->
+        <section id="section-home" class="space-y-12 pb-16">
+            <!-- 1. HERO SECTION BANNER -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+                <div class="relative rounded-3xl overflow-hidden bg-cream-200 min-h-[460px] md:min-h-[520px] flex items-center p-8 sm:p-16 shadow-sm">
+                    <div class="absolute inset-0 z-0">
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop" class="w-full h-full object-cover opacity-85">
+                        <div class="absolute inset-0 bg-gradient-to-r from-cream-50/95 via-cream-50/70 to-transparent"></div>
+                    </div>
+
+                    <div class="relative z-10 max-w-lg space-y-5">
+                        <span class="text-xs uppercase font-bold tracking-widest text-tan">New Season Lookbook</span>
+                        <h1 class="serif-title text-4xl sm:text-6xl font-bold text-cream-900 leading-tight">Wear Your Story.<br>Express Your Style.</h1>
+                        <p class="text-xs sm:text-sm text-cream-800 leading-relaxed">
+                            Những đường nét tối giản, bảng màu mộc Earth-tone chất lượng vượt thời gian. Định hình phong cách đường phố tinh tế.
+                        </p>
+                        <div class="pt-2">
+                            <button onclick="showSection('shop', 'all')" class="px-8 py-3.5 bg-cream-900 text-cream-50 rounded-full font-medium text-xs uppercase tracking-wider hover:bg-tan transition shadow-lg inline-flex items-center gap-2">
+                                Shop the Collection <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. CATEGORY CIRCLE ICON BAR -->
+            <div class="bg-cream-100/70 border-y border-cream-200/60 py-6">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between sm:justify-center space-x-6 sm:space-x-12 overflow-x-auto no-scrollbar py-2">
+                        <button onclick="showSection('shop', 'all')" class="flex flex-col items-center group flex-shrink-0">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-cream-300 p-1 bg-white group-hover:border-tan transition shadow-sm overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=200&auto=format&fit=crop" class="w-full h-full object-cover rounded-full">
+                            </div>
+                            <span class="text-[11px] font-semibold mt-2 text-cream-900 group-hover:text-tan">Tất Cả</span>
+                        </button>
+
+                        <button onclick="showSection('shop', 'canvas-bag')" class="flex flex-col items-center group flex-shrink-0">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-cream-300 p-1 bg-white group-hover:border-tan transition shadow-sm overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=200&auto=format&fit=crop" class="w-full h-full object-cover rounded-full">
+                            </div>
+                            <span class="text-[11px] font-semibold mt-2 text-cream-900 group-hover:text-tan">Túi Canvas</span>
+                        </button>
+
+                        <button onclick="showSection('shop', 'jacket')" class="flex flex-col items-center group flex-shrink-0">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-cream-300 p-1 bg-white group-hover:border-tan transition shadow-sm overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=200&auto=format&fit=crop" class="w-full h-full object-cover rounded-full">
+                            </div>
+                            <span class="text-[11px] font-semibold mt-2 text-cream-900 group-hover:text-tan">Áo Khoác Dù</span>
+                        </button>
+
+                        <button onclick="showSection('shop', 'cargo-pants')" class="flex flex-col items-center group flex-shrink-0">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-cream-300 p-1 bg-white group-hover:border-tan transition shadow-sm overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=200&auto=format&fit=crop" class="w-full h-full object-cover rounded-full">
+                            </div>
+                            <span class="text-[11px] font-semibold mt-2 text-cream-900 group-hover:text-tan">Quần Túi Hộp</span>
+                        </button>
+
+                        <button onclick="showSection('shop', 'all')" class="flex flex-col items-center group flex-shrink-0">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-cream-300 p-1 bg-white group-hover:border-tan transition shadow-sm overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=200&auto=format&fit=crop" class="w-full h-full object-cover rounded-full">
+                            </div>
+                            <span class="text-[11px] font-semibold mt-2 text-cream-900 group-hover:text-tan">Phụ Kiện</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. NEW ARRIVALS GRID -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-end mb-6 border-b border-cream-200 pb-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-tan">Just Dropped</span>
+                        <h2 class="serif-title text-2xl sm:text-3xl font-bold text-cream-900">Sản Phẩm Mới Ra Mắt</h2>
+                    </div>
+                    <button onclick="showSection('shop', 'all')" class="text-xs font-bold text-tan hover:text-cream-900 transition flex items-center gap-1">
+                        Xem Tất Cả <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </button>
+                </div>
+                <div id="home-new-arrivals" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </div>
+
+            <!-- 4. DUAL PROMO BANNERS -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="relative rounded-3xl overflow-hidden h-64 bg-cream-900 text-cream-50 p-8 flex flex-col justify-between group cursor-pointer" onclick="showSection('shop', 'cargo-pants')">
+                        <img src="https://images.unsplash.com/photo-1517445312882-bc9910d016b7?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition duration-500">
+                        <div class="relative z-10 space-y-2">
+                            <span class="text-[10px] uppercase font-bold tracking-widest bg-tan/90 text-white px-3 py-1 rounded-full inline-block">Ưu đãi đến 30%</span>
+                            <h3 class="serif-title text-2xl font-bold">Minimalist Streetwear</h3>
+                            <p class="text-xs text-cream-200 max-w-xs">Bộ sưu tập quần túi hộp Utility kết hợp cùng áo khoác phong cách Urban.</p>
+                        </div>
+                        <div class="relative z-10 pt-4">
+                            <span class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white text-cream-900 text-xs font-bold group-hover:bg-tan group-hover:text-white transition">
+                                Khám Phá Ngay <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="relative rounded-3xl overflow-hidden h-64 bg-cream-200 text-cream-900 p-8 flex flex-col justify-between group cursor-pointer" onclick="showSection('shop', 'canvas-bag')">
+                        <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:scale-105 transition duration-500">
+                        <div class="relative z-10 space-y-2">
+                            <span class="text-[10px] uppercase font-bold tracking-widest bg-cream-900 text-white px-3 py-1 rounded-full inline-block">Crafted for Comfort</span>
+                            <h3 class="serif-title text-2xl font-bold">Premium Canvas Collection</h3>
+                            <p class="text-xs text-cream-800 max-w-xs">Túi Canvas bền bỉ 14oz với tay cầm bọc da sang trọng.</p>
+                        </div>
+                        <div class="relative z-10 pt-4">
+                            <span class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-cream-900 text-white text-xs font-bold group-hover:bg-tan transition">
+                                Xem Bộ Sưu Tập <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. BEST SELLERS -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <div class="flex justify-between items-end border-b border-cream-200 pb-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-tan">Top Choice</span>
+                        <h2 class="serif-title text-2xl sm:text-3xl font-bold text-cream-900">Sản Phẩm Bán Chạy</h2>
+                    </div>
+                </div>
+
+                <div id="home-bestsellers-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+
+                <!-- Curated Collections Grid -->
+                <div class="pt-6">
+                    <h3 class="serif-title text-xl font-bold text-cream-900 mb-4">Bộ Sưu Tập Xu Hướng</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div onclick="showSection('shop', 'canvas-bag')" class="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1590874103328-eac38a683ce7?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-darkcharcoal/80 via-transparent to-transparent"></div>
+                            <span class="absolute bottom-4 left-4 text-white text-sm font-bold serif-title">Urban Canvas</span>
+                        </div>
+                        <div onclick="showSection('shop', 'cargo-pants')" class="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-darkcharcoal/80 via-transparent to-transparent"></div>
+                            <span class="absolute bottom-4 left-4 text-white text-sm font-bold serif-title">Tactical Vibe</span>
+                        </div>
+                        <div onclick="showSection('shop', 'jacket')" class="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-darkcharcoal/80 via-transparent to-transparent"></div>
+                            <span class="absolute bottom-4 left-4 text-white text-sm font-bold serif-title">Cozy Outerwear</span>
+                        </div>
+                        <div onclick="showSection('shop', 'all')" class="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-sm">
+                            <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=400&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-darkcharcoal/80 via-transparent to-transparent"></div>
+                            <span class="absolute bottom-4 left-4 text-white text-sm font-bold serif-title">Minimalist Essentials</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. JUST FOR YOU & LIVE SUSTAINABLY -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-4">
+                        <h3 class="serif-title text-xl font-bold text-cream-900">Dành Cho Riêng Bạn</h3>
+                        <div id="home-just-for-you-grid" class="grid grid-cols-2 gap-4"></div>
+                    </div>
+
+                    <div class="bg-cream-900 text-cream-50 rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden">
+                        <div class="space-y-4 relative z-10">
+                            <span class="text-xs uppercase tracking-widest text-tan font-bold">Eco-Friendly Brand</span>
+                            <h3 class="serif-title text-3xl font-bold leading-tight">Live Sustainably.</h3>
+                            <p class="text-xs text-cream-200 leading-relaxed">
+                                KEM Studio cam kết sử dụng chất liệu vải hữu cơ, bao bì tái chế và quy trình sản xuất cắt giảm thiểu tối đa chất thải carbon.
+                            </p>
+                        </div>
+                        <div class="pt-6 relative z-10">
+                            <button onclick="scrollToStory()" class="px-6 py-3 bg-tan hover:bg-cream-200 hover:text-cream-900 text-white text-xs font-bold rounded-full transition">
+                                Tìm Hiểu Thêm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. REVIEWS PREVIEW -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+                <div class="bg-cream-100/60 border border-cream-200/80 rounded-3xl p-8 space-y-8">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-cream-200 pb-4">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-tan">Khách Hàng Nói Gì</span>
+                            <h2 class="serif-title text-2xl font-bold text-cream-900">Đánh Giá Thực Tế</h2>
+                        </div>
+                        <button onclick="showSection('reviews')" class="px-5 py-2.5 rounded-full border border-cream-900 text-cream-900 text-xs font-bold hover:bg-cream-900 hover:text-white transition flex items-center gap-2">
+                            View All Reviews →
+                        </button>
+                    </div>
+
+                    <div id="home-reviews-preview" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+                </div>
+            </div>
+
+            <!-- 8. VALUE PROPOSITION BAR -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 py-8 border-y border-cream-200 text-center">
+                    <div class="space-y-2 p-2">
+                        <i class="fa-solid fa-truck-fast text-2xl text-tan"></i>
+                        <h4 class="text-xs font-bold text-cream-900">Free Shipping</h4>
+                        <p class="text-[10px] text-cream-800">Đơn hàng trên 500k</p>
+                    </div>
+                    <div class="space-y-2 p-2">
+                        <i class="fa-solid fa-shield-halved text-2xl text-tan"></i>
+                        <h4 class="text-xs font-bold text-cream-900">Secure Payments</h4>
+                        <p class="text-[10px] text-cream-800">100% An toàn bảo mật</p>
+                    </div>
+                    <div class="space-y-2 p-2">
+                        <i class="fa-solid fa-rotate-left text-2xl text-tan"></i>
+                        <h4 class="text-xs font-bold text-cream-900">Easy Returns</h4>
+                        <p class="text-[10px] text-cream-800">Đổi trả trong 7 ngày</p>
+                    </div>
+                    <div class="space-y-2 p-2">
+                        <i class="fa-solid fa-leaf text-2xl text-tan"></i>
+                        <h4 class="text-xs font-bold text-cream-900">Sustainable Choices</h4>
+                        <p class="text-[10px] text-cream-800">Thời trang bền vững</p>
+                    </div>
+                    <div class="space-y-2 p-2 col-span-2 md:col-span-1">
+                        <i class="fa-solid fa-face-smile text-2xl text-tan"></i>
+                        <h4 class="text-xs font-bold text-cream-900">Happy Customers</h4>
+                        <p class="text-[10px] text-cream-800">10,000+ Khách hàng</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STORY SECTION -->
+            <div id="story-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                <div class="bg-cream-200/50 border border-cream-200 rounded-3xl p-8 sm:p-12 text-center max-w-4xl mx-auto space-y-3">
+                    <span class="text-xs uppercase tracking-widest text-tan font-bold">KEM Studio Philosophy</span>
+                    <h2 class="serif-title text-3xl font-bold text-cream-900">Tinh Tế Trong Từng Đường Kim Mũi Chỉ</h2>
+                    <p class="text-xs sm:text-sm text-cream-800 leading-relaxed max-w-2xl mx-auto">
+                        Chúng tôi tin rằng cái đẹp nằm ở sự giản đơn. Tất cả mẫu thiết kế túi canvas, áo khoác dù và quần túi hộp tại KEM Studio được nghiên cứu kĩ lưỡng để mang tới tính ứng dụng tối đa cho cuộc sống thường nhật.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 2: SHOP ================= -->
+        <section id="section-shop" class="hidden py-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-cream-200 pb-6">
+                    <div>
+                        <h1 class="serif-title text-3xl font-bold text-cream-900">Cửa Hàng Thời Trang</h1>
+                        <p class="text-xs text-mocha mt-1">Danh mục sản phẩm phong cách Earth Tone tối giản</p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterCategory('all')" id="tab-all" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-cream-900 text-cream-50 transition">Tất Cả</button>
+                        <button onclick="filterCategory('canvas-bag')" id="tab-canvas-bag" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-cream-200 text-cream-900 hover:bg-cream-300 transition">Túi Canvas</button>
+                        <button onclick="filterCategory('jacket')" id="tab-jacket" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-cream-200 text-cream-900 hover:bg-cream-300 transition">Áo Khoác Dù</button>
+                        <button onclick="filterCategory('cargo-pants')" id="tab-cargo-pants" class="category-btn px-4 py-2 rounded-full text-xs font-semibold bg-cream-200 text-cream-900 hover:bg-cream-300 transition">Quần Túi Hộp</button>
+                    </div>
+                </div>
+
+                <div id="shop-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 3: PRODUCT DETAIL ================= -->
+        <section id="section-detail" class="hidden py-8 sm:py-12">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+
+                <div>
+                    <button onclick="showSection('shop', currentCategory)" class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-tan hover:text-cream-900 transition">
+                        <i class="fa-solid fa-arrow-left"></i> Quay lại danh sách
+                    </button>
+                </div>
+
+                <!-- 1. SINGLE MAIN CARD FRAME -->
+                <div id="product-detail-card" class="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-cream-200/80 space-y-10"></div>
+
+                <!-- 2. PAIRING SUGGESTIONS -->
+                <div id="pairing-suggestions-outer" class="bg-cream-100/70 border border-cream-200 rounded-3xl p-8 space-y-6">
+                    <div class="text-center space-y-1">
+                        <span class="text-[10px] uppercase tracking-widest font-bold text-tan">Góc Nhìn Chi Tiết & Phối Đồ</span>
+                        <h3 class="serif-title text-2xl font-bold text-cream-900">Pairing & Style Suggestion</h3>
+                    </div>
+                    <div id="pairing-grid-container" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SECTION 4: REVIEWS ================= -->
+        <section id="section-reviews" class="hidden py-10">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+                <div class="text-center max-w-xl mx-auto space-y-2">
+                    <span class="text-xs uppercase font-bold tracking-widest text-tan">Customer Feedback</span>
+                    <h1 class="serif-title text-3xl sm:text-4xl font-bold text-cream-900">Đánh Giá Từ Khách Hàng</h1>
+                    <p class="text-xs text-cream-800">Trải nghiệm thực tế từ những người đã sở hữu sản phẩm KEM Studio</p>
+                </div>
+
+                <!-- Rating Breakdown Header -->
+                <div class="bg-white rounded-3xl p-8 border border-cream-200 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="text-center md:border-r border-cream-200 space-y-2">
+                        <div class="serif-title text-5xl font-bold text-cream-900">4.9</div>
+                        <div class="text-yellow-500 text-sm">★★★★★</div>
+                        <p class="text-xs text-cream-800">Dựa trên 248 nhận xét đã xác thực</p>
+                        <button onclick="openWriteReviewModal()" class="mt-2 px-5 py-2 rounded-full bg-cream-900 text-white text-xs font-semibold hover:bg-tan transition">
+                            Viết Đánh Giá Của Bạn
+                        </button>
+                    </div>
+
+                    <div class="md:col-span-2 space-y-2 text-xs">
+                        <div class="flex items-center gap-3">
+                            <span class="w-12 text-right">5 sao</span>
+                            <div class="flex-1 bg-cream-100 rounded-full h-2.5 overflow-hidden">
+                                <div class="bg-yellow-500 h-full w-[90%]"></div>
+                            </div>
+                            <span class="w-8">90%</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-12 text-right">4 sao</span>
+                            <div class="flex-1 bg-cream-100 rounded-full h-2.5 overflow-hidden">
+                                <div class="bg-yellow-500 h-full w-[8%]"></div>
+                            </div>
+                            <span class="w-8">8%</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="w-12 text-right">3 sao</span>
+                            <div class="flex-1 bg-cream-100 rounded-full h-2.5 overflow-hidden">
+                                <div class="bg-yellow-500 h-full w-[2%]"></div>
+                            </div>
+                            <span class="w-8">2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Filter Bar -->
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-cream-200 pb-4">
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterReviews('all')" id="rev-tab-all" class="rev-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-cream-900 text-white">Tất Cả</button>
+                        <button onclick="filterReviews('canvas-bag')" id="rev-tab-canvas-bag" class="rev-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-cream-200 text-cream-900">Túi Canvas</button>
+                        <button onclick="filterReviews('jacket')" id="rev-tab-jacket" class="rev-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-cream-200 text-cream-900">Áo Khoác Dù</button>
+                        <button onclick="filterReviews('cargo-pants')" id="rev-tab-cargo-pants" class="rev-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-cream-200 text-cream-900">Quần Túi Hộp</button>
+                    </div>
+                </div>
+
+                <!-- Detailed Reviews Grid -->
+                <div id="full-reviews-list" class="space-y-6"></div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Slide-Over Drawers & Modals -->
-    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden"></div>
+    <!-- SHOPPING CART SLIDE-OVER DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+        <div onclick="toggleCartDrawer()" class="fixed inset-0 bg-darkcharcoal/40 backdrop-blur-sm transition-opacity"></div>
+        <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+            <div class="pointer-events-auto w-screen max-w-md bg-cream-50 shadow-2xl flex flex-col justify-between">
+                <div class="px-6 py-5 border-b border-cream-200 flex items-center justify-between">
+                    <h2 class="serif-title text-xl font-bold text-cream-900 flex items-center gap-2">
+                        <i class="fa-solid fa-bag-shopping text-tan"></i> Túi Hàng Của Bạn
+                    </h2>
+                    <button onclick="toggleCartDrawer()" class="text-cream-800 hover:text-cream-900 p-2">
+                        <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                </div>
+
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+
+                <div class="p-6 bg-white border-t border-cream-200 space-y-4">
+                    <div class="space-y-1.5 text-sm">
+                        <div class="flex justify-between text-cream-800">
+                            <span>Tạm tính:</span>
+                            <span id="cart-subtotal" class="font-semibold text-cream-900">0 đ</span>
+                        </div>
+                        <div class="flex justify-between text-cream-800">
+                            <span>Phí vận chuyển:</span>
+                            <span class="text-tan font-medium">Miễn phí</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold text-cream-900 pt-2 border-t border-cream-200">
+                            <span>Tổng cộng:</span>
+                            <span id="cart-total" class="text-lg text-tan">0 đ</span>
+                        </div>
+                    </div>
+
+                    <button onclick="openCheckoutModal()" id="btn-checkout-trigger" class="w-full py-3.5 bg-cream-900 text-cream-50 rounded-xl font-medium text-sm hover:bg-tan transition shadow-md">
+                        Tiến Hành Đặt Hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/50 backdrop-blur-sm hidden">
+        <div class="bg-cream-50 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl border border-cream-200">
+            <div class="flex justify-between items-center border-b border-cream-200 pb-4">
+                <h3 class="serif-title text-xl font-bold text-cream-900">Thông Tin Giao Hàng</h3>
+                <button onclick="closeCheckoutModal()" class="text-cream-800 hover:text-cream-900">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-4 text-sm">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-cream-800 mb-1">Họ & Tên khách hàng *</label>
+                    <input type="text" id="cust-name" required placeholder="Nguyễn Văn A" class="w-full px-4 py-2.5 rounded-xl border border-cream-300 bg-white focus:outline-none focus:ring-2 focus:ring-tan">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-cream-800 mb-1">Số điện thoại *</label>
+                    <input type="tel" id="cust-phone" required placeholder="0901234567" class="w-full px-4 py-2.5 rounded-xl border border-cream-300 bg-white focus:outline-none focus:ring-2 focus:ring-tan">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-cream-800 mb-1">Địa chỉ nhận hàng *</label>
+                    <textarea id="cust-address" required rows="2" placeholder="Số nhà, Tên đường, Phường/Xã..." class="w-full px-4 py-2.5 rounded-xl border border-cream-300 bg-white focus:outline-none focus:ring-2 focus:ring-tan"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-3.5 bg-cream-900 text-white rounded-xl font-semibold text-sm hover:bg-tan transition shadow-lg">
+                        Xác Nhận Đặt Hàng
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- WRITE REVIEW MODAL -->
+    <div id="write-review-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/50 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl border border-cream-200">
+            <div class="flex justify-between items-center border-b border-cream-200 pb-3">
+                <h3 class="serif-title text-xl font-bold text-cream-900">Viết Đánh Giá</h3>
+                <button onclick="closeWriteReviewModal()" class="text-cream-800">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form onsubmit="submitNewReview(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Tên của bạn *</label>
+                    <input type="text" id="rev-author" required placeholder="Nhập tên..." class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50">
+                </div>
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Sản phẩm đã mua *</label>
+                    <select id="rev-product-select" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50">
+                        <option value="Túi Canvas Grand Studio Tote">Túi Canvas Grand Studio Tote</option>
+                        <option value="Áo Khoác Dù Essential Windbreaker">Áo Khoác Dù Essential Windbreaker</option>
+                        <option value="Quần Túi Hộp Urban Cargo Pants">Quần Túi Hộp Urban Cargo Pants</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Đánh giá (Số sao) *</label>
+                    <select id="rev-stars" class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50">
+                        <option value="5">5 ⭐⭐⭐⭐⭐ - Rất hài lòng</option>
+                        <option value="4">4 ⭐⭐⭐⭐ - Tốt</option>
+                        <option value="3">3 ⭐⭐⭐ - Bình thường</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-cream-800 mb-1">Nội dung nhận xét *</label>
+                    <textarea id="rev-text" required rows="3" placeholder="Chia sẻ cảm nhận về chất liệu, đường may, phom dáng..." class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50"></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-cream-900 text-white rounded-xl font-bold hover:bg-tan transition">
+                    Gửi Đánh Giá
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
     <div id="toast-notification" class="fixed bottom-6 right-6 z-50 bg-cream-900 text-cream-50 px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
         <i class="fa-solid fa-circle-check text-green-400 text-lg"></i>
         <span id="toast-message" class="text-xs font-medium">Đã cập nhật!</span>
     </div>
 
-    <!-- Tải các Module JavaScript theo đúng thứ tự dependency -->
+    <!-- FOOTER -->
+    <footer class="bg-cream-900 text-cream-50 border-t border-cream-800 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="space-y-3 md:col-span-2">
+                    <a href="#" onclick="showSection('home'); return false;" class="serif-title text-2xl font-bold">KEM STUDIO</a>
+                    <p class="text-xs text-cream-200 leading-relaxed max-w-sm">
+                        Thương hiệu thời trang tối giản đường phố Earth Tone. Sẵn sàng vận hành 24/7 trực tiếp trên GitHub Pages.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-tan mb-3">Danh Mục</h4>
+                    <ul class="space-y-2 text-xs text-cream-200">
+                        <li><a href="#" onclick="showSection('shop', 'canvas-bag'); return false;" class="hover:text-white">Túi Canvas</a></li>
+                        <li><a href="#" onclick="showSection('shop', 'jacket'); return false;" class="hover:text-white">Áo Khoác Dù</a></li>
+                        <li><a href="#" onclick="showSection('shop', 'cargo-pants'); return false;" class="hover:text-white">Quần Túi Hộp</a></li>
+                        <li><a href="#" onclick="showSection('reviews'); return false;" class="hover:text-white">Review Khách Hàng</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-tan mb-3">Liên Hệ</h4>
+                    <ul class="space-y-2 text-xs text-cream-200">
+                        <li><i class="fa-solid fa-envelope mr-2"></i> contact@kemstudio.vn</li>
+                        <li><i class="fa-solid fa-phone mr-2"></i> +84 901 234 567</li>
+                        <li><i class="fa-solid fa-location-dot mr-2"></i> TP. Hồ Chí Minh, Việt Nam</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-cream-800 mt-8 pt-6 text-center text-xs text-cream-300">
+                &copy; 2026 KEM STUDIO. Created for GitHub Pages. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load Modulated Application Scripts -->
     <script src="js/data.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/animations.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
