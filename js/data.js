@@ -1,6 +1,6 @@
 // ==========================================
 // KEM STUDIO DATA STORE
-// Auto Updated via Admin Portal on 11:28:02 2/11/2026
+// Auto Updated via Admin Portal on 11:32:10 2/11/2026
 // ==========================================
 
 const productsData = [
@@ -231,7 +231,7 @@ const productsData = [
         "colors": [
             {
                 "name": "Nâu",
-                "hex": "#8c7a6b",
+                "hex": "#5c4838",
                 "image": "https://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983"
             }
         ],
