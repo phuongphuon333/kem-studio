@@ -529,13 +529,48 @@ function closeCheckoutModal() {
     document.getElementById('checkout-modal').classList.add('hidden');
 }
 
-function handleOrderSubmit(e) {
+async function handleOrderSubmit(e) {
     e.preventDefault();
-    cart = [];
-    saveCart();
-    closeCheckoutModal();
-    showToast("Đặt hàng thành công! KEM Studio sẽ liên hệ sớm.");
-    showSection('home');
+
+    if (cart.length === 0) {
+        showToast("Túi hàng của bạn đang trống!");
+        return;
+    }
+
+    // 1. Lấy thông tin khách hàng từ Form
+    const customerName = document.getElementById('checkout-name')?.value || 'Khách lẻ';
+    const phone = document.getElementById('checkout-phone')?.value || '';
+    const address = document.getElementById('checkout-address')?.value || '';
+    const note = document.getElementById('checkout-note')?.value || '';
+
+    // 2. Gom danh sách sản phẩm trong giỏ hàng
+    const itemsSummary = cart.map(item => `${item.name} (${item.colorName} - Size ${item.size}) x${item.quantity}`);
+    const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    const orderPayload = {
+        customerName: customerName,
+        phone: phone,
+        address: address,
+        items: itemsSummary,
+        totalPrice: totalAmount,
+        note: note
+    };
+
+    showToast("⏳ Đang xử lý đơn hàng...");
+
+    // 3. Gửi dữ liệu sang Server Render -> Google Sheets
+    const result = await submitOrderToSheet(orderPayload);
+
+    if (result.success) {
+        // Xóa giỏ hàng sau khi đặt thành công
+        cart = [];
+        saveCart();
+        closeCheckoutModal();
+        showToast("🎉 Đặt hàng thành công! Thông tin đã được ghi nhận.");
+        showSection('home');
+    } else {
+        alert("❌ Đặt hàng thất bại: " + result.message);
+    }
 }
 
 function handleSearch(e) {
@@ -556,4 +591,23 @@ function showToast(msg) {
     setTimeout(() => {
         toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
     }, 3000);
+}
+// Hàm kết nối API Server Render để lưu thông tin vào Google Sheets
+async function submitOrderToSheet(customerData) {
+    // Thay URL Render thực tế của Kem vào đây
+    const SERVER_URL = 'https://kem-studio-order-backend.onrender.com';
+
+    try {
+        const response = await fetch(SERVER_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(customerData)
+        });
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error("Lỗi gửi đơn hàng:", error);
+        return { success: false, message: "Không thể kết nối tới máy chủ đặt hàng." };
+    }
 }
