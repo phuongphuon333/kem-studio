@@ -48,8 +48,11 @@
             </div>
 
             <div class="flex items-center space-x-3 text-xs">
-                <button onclick="exportDataJs()" class="bg-tan hover:bg-amber-600 text-white font-semibold px-4 py-2 rounded-xl transition flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-code"></i> Xuất file data.js
+                <button onclick="commitToGitHub()" id="btn-sync-gh" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Đẩy Lên GitHub
+                </button>
+                <button onclick="openConfigModal()" class="bg-cream-800 hover:bg-cream-700 text-cream-100 font-semibold px-3 py-2 rounded-xl transition text-[11px] flex items-center gap-1">
+                    <i class="fa-solid fa-gear"></i> Cấu Hình Token
                 </button>
                 <a href="index.html" target="_blank" class="bg-white/10 hover:bg-white/20 text-cream-100 font-medium px-3 py-2 rounded-xl transition text-[11px] flex items-center gap-1">
                     Xem Web <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
@@ -178,72 +181,6 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="p-5 bg-cream-50 rounded-2xl border border-cream-200 space-y-3">
-                            <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2 border-b border-cream-200 pb-2">
-                                <i class="fa-solid fa-rectangle-ad text-tan"></i> Banner Quảng Cáo Trái
-                            </h4>
-                            <div>
-                                <label class="block font-semibold mb-1">Tag Ưu Đãi</label>
-                                <input type="text" id="b-p1-tag" class="w-full p-2 rounded-xl border bg-white">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Tiêu Đề Banner</label>
-                                <input type="text" id="b-p1-title" class="w-full p-2 rounded-xl border bg-white font-bold">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Link Ảnh Banner</label>
-                                <input type="text" id="b-p1-img" class="w-full p-2 rounded-xl border bg-white">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Mô Tả Ngắn</label>
-                                <textarea id="b-p1-desc" rows="2" class="w-full p-2 rounded-xl border bg-white"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="p-5 bg-cream-50 rounded-2xl border border-cream-200 space-y-3">
-                            <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2 border-b border-cream-200 pb-2">
-                                <i class="fa-solid fa-rectangle-ad text-tan"></i> Banner Quảng Cáo Phải
-                            </h4>
-                            <div>
-                                <label class="block font-semibold mb-1">Tag Ưu Đãi</label>
-                                <input type="text" id="b-p2-tag" class="w-full p-2 rounded-xl border bg-white">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Tiêu Đề Banner</label>
-                                <input type="text" id="b-p2-title" class="w-full p-2 rounded-xl border bg-white font-bold">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Link Ảnh Banner</label>
-                                <input type="text" id="b-p2-img" class="w-full p-2 rounded-xl border bg-white">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Mô Tả Ngắn</label>
-                                <textarea id="b-p2-desc" rows="2" class="w-full p-2 rounded-xl border bg-white"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-5 bg-cream-50 rounded-2xl border border-cream-200 space-y-3">
-                        <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2 border-b border-cream-200 pb-2">
-                            <i class="fa-solid fa-quote-left text-tan"></i> Triết Lý Thương Hiệu (Brand Story)
-                        </h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block font-semibold mb-1">Tag Nhỏ</label>
-                                <input type="text" id="b-story-tag" class="w-full p-2.5 rounded-xl border bg-white">
-                            </div>
-                            <div>
-                                <label class="block font-semibold mb-1">Tiêu Đề Bài Viết</label>
-                                <input type="text" id="b-story-title" class="w-full p-2.5 rounded-xl border bg-white font-bold">
-                            </div>
-                            <div class="sm:col-span-2">
-                                <label class="block font-semibold mb-1">Nội Dung Chi Tiết</label>
-                                <textarea id="b-story-desc" rows="3" class="w-full p-2.5 rounded-xl border bg-white"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="flex justify-end pt-2">
                         <button type="submit" class="px-6 py-3 bg-cream-900 text-white font-bold rounded-xl hover:bg-tan transition shadow-md flex items-center gap-2">
                             <i class="fa-solid fa-floppy-disk"></i> Lưu Nội Dung Banner
@@ -284,7 +221,6 @@
 
             <form id="product-form" onsubmit="saveProduct(event)" class="space-y-6 text-xs">
                 
-                <!-- 1. THÔNG TIN CƠ BẢN -->
                 <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
                     <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
                         <i class="fa-solid fa-circle-info text-tan"></i> 1. Thông Tin Cơ Bản
@@ -329,70 +265,15 @@
                     </div>
                 </div>
 
-                <!-- 2. SPECS CHI TIẾT SẢN PHẨM -->
-                <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
-                    <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
-                        <i class="fa-solid fa-list-check text-tan"></i> 2. Thông Số Chi Tiết (Specs)
-                    </h4>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block font-semibold mb-1">Kích thước (Dimensions)</label>
-                            <textarea id="p-spec-dim" rows="2" placeholder="W:380mm\nD:120mm\nH:420mm" class="w-full p-2.5 rounded-xl border bg-white font-mono"></textarea>
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-1">Cấu trúc (Structure)</label>
-                            <textarea id="p-spec-struct" rows="2" placeholder="Canvas 14oz\nQuai da bò" class="w-full p-2.5 rounded-xl border bg-white font-mono"></textarea>
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-1">Hoàn thiện (Finish)</label>
-                            <textarea id="p-spec-finish" rows="2" placeholder="Mộc tự nhiên" class="w-full p-2.5 rounded-xl border bg-white font-mono"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. BIẾN THỂ MÀU SẮC & HÌNH ẢNH -->
+                <!-- 2. BIẾN THỂ MÀU SẮC & HÌNH ẢNH -->
                 <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
                     <div class="flex justify-between items-center">
                         <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
-                            <i class="fa-solid fa-palette text-tan"></i> 3. Biến Thể Màu & Hình Ảnh
+                            <i class="fa-solid fa-palette text-tan"></i> 2. Biến Thể Màu & Hình Ảnh
                         </h4>
                         <button type="button" onclick="addColorSwatch()" class="bg-tan text-white font-bold px-3 py-1.5 rounded-xl hover:bg-cream-900 transition">+ Thêm Màu</button>
                     </div>
                     <div id="color-swatches-container" class="space-y-3"></div>
-                </div>
-
-                <!-- 4. CÂU CHUYỆN THIẾT KẾ (STORY BLOCKS 01, 02, 03) -->
-                <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
-                    <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
-                        <i class="fa-solid fa-book-open text-tan"></i> 4. Câu Chuyện Thiết Kế (Story Highlights)
-                    </h4>
-                    
-                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
-                        <span class="font-bold text-tan">Highlight 01</span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <input type="text" id="p-f1-title" placeholder="Tiêu đề 01..." class="p-2 rounded-lg border">
-                            <input type="text" id="p-f1-img" placeholder="Link ảnh 01..." class="p-2 rounded-lg border">
-                        </div>
-                        <textarea id="p-f1-desc" rows="2" placeholder="Mô tả chi tiết 01..." class="w-full p-2 rounded-lg border"></textarea>
-                    </div>
-
-                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
-                        <span class="font-bold text-tan">Highlight 02</span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <input type="text" id="p-f2-title" placeholder="Tiêu đề 02..." class="p-2 rounded-lg border">
-                            <input type="text" id="p-f2-img" placeholder="Link ảnh 02..." class="p-2 rounded-lg border">
-                        </div>
-                        <textarea id="p-f2-desc" rows="2" placeholder="Mô tả chi tiết 02..." class="w-full p-2 rounded-lg border"></textarea>
-                    </div>
-
-                    <div class="p-3 bg-white rounded-xl border border-cream-200 space-y-2">
-                        <span class="font-bold text-tan">Highlight 03</span>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <input type="text" id="p-f3-title" placeholder="Tiêu đề 03..." class="p-2 rounded-lg border">
-                            <input type="text" id="p-f3-img" placeholder="Link ảnh 03..." class="p-2 rounded-lg border">
-                        </div>
-                        <textarea id="p-f3-desc" rows="2" placeholder="Mô tả chi tiết 03..." class="w-full p-2 rounded-lg border"></textarea>
-                    </div>
                 </div>
 
                 <div class="flex justify-end space-x-3 pt-4 border-t border-cream-200">
@@ -403,16 +284,30 @@
         </div>
     </div>
 
-    <!-- EXPORT CODE MODAL -->
-    <div id="export-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/60 backdrop-blur-sm hidden">
-        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 space-y-4 shadow-2xl border border-cream-200">
+    <!-- CONFIG GITHUB TOKEN MODAL -->
+    <div id="config-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkcharcoal/60 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-cream-200">
             <div class="flex justify-between items-center border-b border-cream-200 pb-3">
-                <h3 class="serif-title text-xl font-bold text-cream-900">Mã Nguồn Cập Nhật `js/data.js`</h3>
-                <button onclick="closeExportModal()" class="text-cream-800"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="serif-title text-xl font-bold text-cream-900">Cấu Hình GitHub API</h3>
+                <button onclick="closeConfigModal()" class="text-cream-800"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <textarea id="export-code-area" readonly rows="14" class="w-full p-4 font-mono text-[11px] bg-cream-900 text-cream-100 rounded-2xl"></textarea>
-            <div class="flex justify-end space-x-3">
-                <button onclick="copyExportCode()" class="px-5 py-2.5 bg-tan text-white rounded-xl font-bold text-xs"><i class="fa-regular fa-copy"></i> Sao Chép Mã</button>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold mb-1">GitHub Username / Owner *</label>
+                    <input type="text" id="cfg-owner" placeholder="vd: phuongphuon333" class="w-full p-2.5 rounded-xl border bg-cream-50">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Repository Name *</label>
+                    <input type="text" id="cfg-repo" placeholder="vd: kem-studio-web" class="w-full p-2.5 rounded-xl border bg-cream-50">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Personal Access Token (PAT) *</label>
+                    <input type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxx" class="w-full p-2.5 rounded-xl border bg-cream-50 font-mono">
+                </div>
+                <p class="text-[10px] text-mocha italic">Token này sẽ được lưu an toàn trong localStorage của trình duyệt Mac.</p>
+            </div>
+            <div class="flex justify-end space-x-3 pt-2">
+                <button onclick="saveConfig()" class="px-5 py-2.5 bg-cream-900 text-white rounded-xl font-bold text-xs">Lưu Cấu Hình</button>
             </div>
         </div>
     </div>
@@ -425,18 +320,12 @@
     <script>
         let products = (typeof productsData !== 'undefined' && productsData.length > 0) ? JSON.parse(JSON.stringify(productsData)) : [];
         let reviews = (typeof reviewsData !== 'undefined' && reviewsData.length > 0) ? JSON.parse(JSON.stringify(reviewsData)) : [];
-        let banners = (typeof bannersData !== 'undefined') ? JSON.parse(JSON.stringify(bannersData)) : {
-            hero: { tag: "NEW SEASON LOOKBOOK", title: "Wear Your Story.\nExpress Your Style.", description: "Mô tả...", image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d", buttonText: "Shop Collection" },
-            promoLeft: { tag: "30% OFF", title: "Minimalist Streetwear", description: "Mô tả...", image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7", linkCategory: "cargo-pants" },
-            promoRight: { tag: "CRAFTED FOR COMFORT", title: "Premium Canvas Collection", description: "Mô tả...", image: "https://images.unsplash.com/photo-1544816155-12df9643f363", linkCategory: "canvas-bag" },
-            story: { tag: "KEM STUDIO PHILOSOPHY", title: "Tinh Tế Trong Từng Đường Kim Mũi Chỉ", description: "Mô tả..." }
-        };
+        let banners = (typeof bannersData !== 'undefined') ? JSON.parse(JSON.stringify(bannersData)) : {};
 
         window.addEventListener('DOMContentLoaded', () => {
             updateDashboardStats();
             renderProductsTable();
             renderReviewsTable();
-            loadBannersToForm();
         });
 
         function updateDashboardStats() {
@@ -450,92 +339,15 @@
             document.getElementById('view-products').classList.add('hidden');
             document.getElementById('view-banners').classList.add('hidden');
             document.getElementById('view-reviews').classList.add('hidden');
-            document.getElementById('add-product-btn').classList.add('hidden');
 
-            document.getElementById('tab-btn-products').className = "px-4 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-100 text-cream-900";
-            document.getElementById('tab-btn-banners').className = "px-4 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-100 text-cream-900";
-            document.getElementById('tab-btn-reviews').className = "px-4 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-100 text-cream-900";
-
-            if (tab === 'products') {
-                document.getElementById('view-products').classList.remove('hidden');
-                document.getElementById('add-product-btn').classList.remove('hidden');
-                document.getElementById('tab-btn-products').className = "px-4 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-900 text-white";
-            } else if (tab === 'banners') {
-                document.getElementById('view-banners').classList.remove('hidden');
-                document.getElementById('tab-btn-banners').className = "px-4 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-900 text-white";
-            } else {
-                document.getElementById('view-reviews').classList.remove('hidden');
-                document.getElementById('tab-btn-reviews').className = "px-4 py-2.5 rounded-2xl text-xs font-bold transition bg-cream-900 text-white";
-            }
-        }
-
-        function loadBannersToForm() {
-            document.getElementById('b-hero-tag').value = banners.hero?.tag || '';
-            document.getElementById('b-hero-title').value = banners.hero?.title || '';
-            document.getElementById('b-hero-btn').value = banners.hero?.buttonText || '';
-            document.getElementById('b-hero-img').value = banners.hero?.image || '';
-            document.getElementById('b-hero-desc').value = banners.hero?.description || '';
-
-            document.getElementById('b-p1-tag').value = banners.promoLeft?.tag || '';
-            document.getElementById('b-p1-title').value = banners.promoLeft?.title || '';
-            document.getElementById('b-p1-img').value = banners.promoLeft?.image || '';
-            document.getElementById('b-p1-desc').value = banners.promoLeft?.description || '';
-
-            document.getElementById('b-p2-tag').value = banners.promoRight?.tag || '';
-            document.getElementById('b-p2-title').value = banners.promoRight?.title || '';
-            document.getElementById('b-p2-img').value = banners.promoRight?.image || '';
-            document.getElementById('b-p2-desc').value = banners.promoRight?.description || '';
-
-            document.getElementById('b-story-tag').value = banners.story?.tag || '';
-            document.getElementById('b-story-title').value = banners.story?.title || '';
-            document.getElementById('b-story-desc').value = banners.story?.description || '';
-        }
-
-        function saveBanners(e) {
-            e.preventDefault();
-            banners = {
-                hero: {
-                    tag: document.getElementById('b-hero-tag').value,
-                    title: document.getElementById('b-hero-title').value,
-                    buttonText: document.getElementById('b-hero-btn').value,
-                    image: document.getElementById('b-hero-img').value,
-                    description: document.getElementById('b-hero-desc').value
-                },
-                promoLeft: {
-                    tag: document.getElementById('b-p1-tag').value,
-                    title: document.getElementById('b-p1-title').value,
-                    image: document.getElementById('b-p1-img').value,
-                    description: document.getElementById('b-p1-desc').value,
-                    linkCategory: 'cargo-pants'
-                },
-                promoRight: {
-                    tag: document.getElementById('b-p2-tag').value,
-                    title: document.getElementById('b-p2-title').value,
-                    image: document.getElementById('b-p2-img').value,
-                    description: document.getElementById('b-p2-desc').value,
-                    linkCategory: 'canvas-bag'
-                },
-                story: {
-                    tag: document.getElementById('b-story-tag').value,
-                    title: document.getElementById('b-story-title').value,
-                    description: document.getElementById('b-story-desc').value
-                }
-            };
-            showToast("Đã lưu nội dung Banner! Bấm Xuất file data.js để cập nhật.");
+            if (tab === 'products') document.getElementById('view-products').classList.remove('hidden');
+            else if (tab === 'banners') document.getElementById('view-banners').classList.remove('hidden');
+            else document.getElementById('view-reviews').classList.remove('hidden');
         }
 
         function renderProductsTable() {
             const tbody = document.getElementById('products-table-body');
-            const query = document.getElementById('product-search').value.toLowerCase();
-            const catFilter = document.getElementById('category-filter').value;
-
-            const filtered = products.filter(p => {
-                const matchSearch = p.name.toLowerCase().includes(query) || p.id.toLowerCase().includes(query);
-                const matchCat = catFilter === 'all' || p.category === catFilter;
-                return matchSearch && matchCat;
-            });
-
-            tbody.innerHTML = filtered.map(p => `
+            tbody.innerHTML = products.map(p => `
                 <tr class="hover:bg-cream-50 transition">
                     <td class="p-4 flex items-center space-x-3">
                         <img src="${p.colors[0]?.image || 'https://via.placeholder.com/80'}" class="w-12 h-12 rounded-xl object-cover border">
@@ -549,7 +361,6 @@
                     <td class="p-4">(${p.colors.length} màu)</td>
                     <td class="p-4">${p.isNew ? '<span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full mr-1">MỚI</span>' : ''} ${p.isBestseller ? '<span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full">HOT</span>' : ''}</td>
                     <td class="p-4 text-right space-x-2">
-                        <button onclick="openProductModal('${p.id}')" class="p-2 hover:text-tan"><i class="fa-solid fa-pen-to-square"></i></button>
                         <button onclick="deleteProduct('${p.id}')" class="p-2 text-red-500"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 </tr>
@@ -565,146 +376,48 @@
                     <td class="p-4 text-amber-500">★★★★★</td>
                     <td class="p-4 truncate max-w-xs">${r.comment}</td>
                     <td class="p-4">${r.date}</td>
-                    <td class="p-4 text-right"><button onclick="deleteReview('${r.id}')" class="text-red-500"><i class="fa-solid fa-trash-can"></i></button></td>
                 </tr>
             `).join('');
         }
 
-        function openProductModal(id = null) {
-            const container = document.getElementById('color-swatches-container');
-            container.innerHTML = '';
+        // ================= GITHUB AUTOMATIC COMMIT API =================
+        function openConfigModal() {
+            document.getElementById('cfg-owner').value = localStorage.getItem('kem_gh_owner') || 'phuongphuon333';
+            document.getElementById('cfg-repo').value = localStorage.getItem('kem_gh_repo') || '';
+            document.getElementById('cfg-token').value = localStorage.getItem('kem_gh_token') || '';
+            document.getElementById('config-modal').classList.remove('hidden');
+        }
 
-            if (id) {
-                const p = products.find(x => x.id === id);
-                document.getElementById('modal-product-title').innerText = "Chỉnh Sửa Sản Phẩm";
-                document.getElementById('p-id').value = p.id;
-                document.getElementById('p-id').readOnly = true;
-                document.getElementById('p-name').value = p.name;
-                document.getElementById('p-category').value = p.category;
-                document.getElementById('p-price').value = p.price;
-                document.getElementById('p-badge').value = p.badge || '';
-                document.getElementById('p-isNew').checked = !!p.isNew;
-                document.getElementById('p-isBestseller').checked = !!p.isBestseller;
+        function closeConfigModal() { document.getElementById('config-modal').classList.add('hidden'); }
 
-                document.getElementById('p-spec-dim').value = p.specs?.dimensions || '';
-                document.getElementById('p-spec-struct').value = p.specs?.structure || '';
-                document.getElementById('p-spec-finish').value = p.specs?.finish || '';
+        function saveConfig() {
+            localStorage.setItem('kem_gh_owner', document.getElementById('cfg-owner').value.trim());
+            localStorage.setItem('kem_gh_repo', document.getElementById('cfg-repo').value.trim());
+            localStorage.setItem('kem_gh_token', document.getElementById('cfg-token').value.trim());
+            closeConfigModal();
+            showToast("Đã lưu cấu hình GitHub Token!");
+        }
 
-                if (p.colors && p.colors.length > 0) {
-                    p.colors.forEach(c => addColorSwatch(c.name, c.hex, c.image));
-                } else {
-                    addColorSwatch();
-                }
+        async function commitToGitHub() {
+            const owner = localStorage.getItem('kem_gh_owner');
+            const repo = localStorage.getItem('kem_gh_repo');
+            const token = localStorage.getItem('kem_gh_token');
 
-                document.getElementById('p-f1-title').value = p.story?.feat1Title || '';
-                document.getElementById('p-f1-img').value = p.story?.feat1Img || '';
-                document.getElementById('p-f1-desc').value = p.story?.feat1Desc || '';
-
-                document.getElementById('p-f2-title').value = p.story?.feat2Title || '';
-                document.getElementById('p-f2-img').value = p.story?.feat2Img || '';
-                document.getElementById('p-f2-desc').value = p.story?.feat2Desc || '';
-
-                document.getElementById('p-f3-title').value = p.story?.feat3Title || '';
-                document.getElementById('p-f3-img').value = p.story?.feat3Img || '';
-                document.getElementById('p-f3-desc').value = p.story?.feat3Desc || '';
-            } else {
-                document.getElementById('modal-product-title').innerText = "Thêm Sản Phẩm Mới";
-                document.getElementById('product-form').reset();
-                document.getElementById('p-id').readOnly = false;
-                document.getElementById('p-id').value = 'bag-' + String(products.length + 1).padStart(2, '0');
-                addColorSwatch('Default Color', '#8C7A6B', 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop');
+            if (!owner || !repo || !token) {
+                alert("Kem chưa cấu hình GitHub Token! Vui lòng bấm vào 'Cấu Hình Token' ở trên cùng.");
+                openConfigModal();
+                return;
             }
 
-            document.getElementById('product-modal').classList.remove('hidden');
-        }
+            const btn = document.getElementById('btn-sync-gh');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang Commit...`;
 
-        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
-
-        function addColorSwatch(name = '', hex = '#8C7A6B', image = '') {
-            const div = document.createElement('div');
-            div.className = "color-item flex items-center gap-2 p-2 bg-white rounded-xl border";
-            div.innerHTML = `
-                <input type="color" value="${hex}" class="w-8 h-8 rounded border-0 cursor-pointer flex-shrink-0">
-                <input type="text" placeholder="Tên màu" value="${name}" class="swatch-name w-1/3 p-2 border rounded-lg">
-                <input type="text" placeholder="Link ảnh (https://... hoặc images/...)" value="${image}" class="swatch-img flex-1 p-2 border rounded-lg">
-                <button type="button" onclick="this.parentElement.remove()" class="text-red-500 p-2 hover:bg-red-50 rounded-lg"><i class="fa-solid fa-xmark"></i></button>
-            `;
-            document.getElementById('color-swatches-container').appendChild(div);
-        }
-
-        function saveProduct(e) {
-            e.preventDefault();
-            const id = document.getElementById('p-id').value.trim();
-            const catLabels = { 'canvas-bag': 'Túi Canvas', 'jacket': 'Áo Khoác Dù', 'cargo-pants': 'Quần Túi Hộp' };
-
-            const colors = [];
-            document.querySelectorAll('#color-swatches-container .color-item').forEach(div => {
-                colors.push({
-                    name: div.querySelector('.swatch-name').value.trim() || 'Màu sắc',
-                    hex: div.querySelector('input[type="color"]').value,
-                    image: div.querySelector('.swatch-img').value.trim() || 'https://via.placeholder.com/800'
-                });
-            });
-
-            const price = parseInt(document.getElementById('p-price').value) || 0;
-
-            const productObj = {
-                id,
-                name: document.getElementById('p-name').value.trim(),
-                category: document.getElementById('p-category').value,
-                categoryLabel: catLabels[document.getElementById('p-category').value] || 'Mặt hàng',
-                price: price,
-                priceFormatted: price.toLocaleString('vi-VN') + ' đ',
-                badge: document.getElementById('p-badge').value.trim() || 'grand',
-                rating: 5.0,
-                reviewsCount: 84,
-                isNew: document.getElementById('p-isNew').checked,
-                isBestseller: document.getElementById('p-isBestseller').checked,
-                colors: colors,
-                specs: {
-                    dimensions: document.getElementById('p-spec-dim').value,
-                    structure: document.getElementById('p-spec-struct').value,
-                    finish: document.getElementById('p-spec-finish').value
-                },
-                story: {
-                    feat1Title: document.getElementById('p-f1-title').value || 'Engineered for Daily Utility',
-                    feat1Desc: document.getElementById('p-f1-desc').value || 'Mô tả tính năng 1...',
-                    feat1Img: document.getElementById('p-f1-img').value || colors[0]?.image,
-
-                    feat2Title: document.getElementById('p-f2-title').value || 'Water-Repellent & High Resilience',
-                    feat2Desc: document.getElementById('p-f2-desc').value || 'Mô tả tính năng 2...',
-                    feat2Img: document.getElementById('p-f2-img').value || colors[0]?.image,
-
-                    feat3Title: document.getElementById('p-f3-title').value || 'Minimalist Silhouette',
-                    feat3Desc: document.getElementById('p-f3-desc').value || 'Mô tả tính năng 3...',
-                    feat3Img: document.getElementById('p-f3-img').value || colors[0]?.image
-                },
-                pairings: [
-                    { title: 'Chính diện', img: colors[0]?.image },
-                    { title: 'Góc nghiêng 45°', img: colors[1]?.image || colors[0]?.image }
-                ]
-            };
-
-            const idx = products.findIndex(p => p.id === id);
-            if (idx >= 0) products[idx] = productObj; else products.push(productObj);
-            
-            renderProductsTable();
-            closeProductModal();
-            showToast("Đã lưu sản phẩm đầy đủ thông số & câu chuyện!");
-        }
-
-        function deleteProduct(id) {
-            if (confirm(`Bạn có chắc muốn xóa sản phẩm ${id}?`)) {
-                products = products.filter(p => p.id !== id);
-                renderProductsTable();
-                showToast("Đã xóa sản phẩm!");
-            }
-        }
-
-        function exportDataJs() {
-            const code = `// ==========================================
+            try {
+                // 1. Tạo nội dung file data.js mới
+                const fileContent = `// ==========================================
 // KEM STUDIO DATA STORE
-// Rendered via Admin Portal on ${new Date().toLocaleDateString('vi-VN')}
+// Auto Updated via Admin Portal on ${new Date().toLocaleString('vi-VN')}
 // ==========================================
 
 const productsData = ${JSON.stringify(products, null, 4)};
@@ -712,16 +425,54 @@ const productsData = ${JSON.stringify(products, null, 4)};
 let reviewsData = ${JSON.stringify(reviews, null, 4)};
 
 let bannersData = ${JSON.stringify(banners, null, 4)};`;
-            document.getElementById('export-code-area').value = code;
-            document.getElementById('export-modal').classList.remove('hidden');
-        }
 
-        function closeExportModal() { document.getElementById('export-modal').classList.add('hidden'); }
-        function copyExportCode() {
-            const area = document.getElementById('export-code-area');
-            area.select();
-            document.execCommand('copy');
-            showToast("Đã chép mã! Dán đè vào js/data.js");
+                // 2. Chuyển đổi nội dung sang UTF-8 Base64
+                const utf8Bytes = new TextEncoder().encode(fileContent);
+                let binaryStr = '';
+                utf8Bytes.forEach(b => binaryStr += String.fromCharCode(b));
+                const base64Content = btoa(binaryStr);
+
+                const filePath = 'js/data.js';
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+
+                // 3. Lấy SHA file hiện tại
+                const getRes = await fetch(apiUrl, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                
+                let sha = '';
+                if (getRes.ok) {
+                    const getData = await getRes.json();
+                    sha = getData.sha;
+                }
+
+                // 4. Gửi PUT request cập nhật file
+                const putRes = await fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Admin update js/data.js - ${new Date().toLocaleTimeString('vi-VN')}`,
+                        content: base64Content,
+                        sha: sha ? sha : undefined
+                    })
+                });
+
+                if (putRes.ok) {
+                    showToast("🎉 Đã đẩy và cập nhật file js/data.js trên GitHub thành công!");
+                } else {
+                    const errData = await putRes.json();
+                    alert("❌ Lỗi đẩy GitHub: " + errData.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("❌ Lỗi kết nối API GitHub!");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Đẩy Lên GitHub`;
+            }
         }
 
         function showToast(msg) {
