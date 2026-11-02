@@ -537,13 +537,12 @@ async function handleOrderSubmit(e) {
         return;
     }
 
-    // 1. Lấy thông tin khách hàng từ Form
-    const customerName = document.getElementById('checkout-name')?.value || 'Khách lẻ';
-    const phone = document.getElementById('checkout-phone')?.value || '';
-    const address = document.getElementById('checkout-address')?.value || '';
-    const note = document.getElementById('checkout-note')?.value || '';
+    // Lấy đúng ID từ file index.html
+    const customerName = document.getElementById('cust-name')?.value || 'Khách lẻ';
+    const phone = document.getElementById('cust-phone')?.value || '';
+    const address = document.getElementById('cust-address')?.value || '';
+    const note = ''; // Nếu sau này Kem thêm ô ghi chú
 
-    // 2. Gom danh sách sản phẩm trong giỏ hàng
     const itemsSummary = cart.map(item => `${item.name} (${item.colorName} - Size ${item.size}) x${item.quantity}`);
     const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
@@ -552,17 +551,14 @@ async function handleOrderSubmit(e) {
         phone: phone,
         address: address,
         items: itemsSummary,
-        totalPrice: totalAmount,
-        note: note
+        totalPrice: totalAmount
     };
 
     showToast("⏳ Đang xử lý đơn hàng...");
 
-    // 3. Gửi dữ liệu sang Server Render -> Google Sheets
     const result = await submitOrderToSheet(orderPayload);
 
     if (result.success) {
-        // Xóa giỏ hàng sau khi đặt thành công
         cart = [];
         saveCart();
         closeCheckoutModal();
