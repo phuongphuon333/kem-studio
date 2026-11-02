@@ -591,7 +591,7 @@ function showToast(msg) {
 // Hàm kết nối API Server Render để lưu thông tin vào Google Sheets
 async function submitOrderToSheet(customerData) {
     // Thay URL Render thực tế của Kem vào đây
-    const SERVER_URL = 'https://kem-studio-order-backend.onrender.com';
+    const SERVER_URL = 'https://kem-studio-order-backend.onrender.com/api/orders';
 
     try {
         const response = await fetch(SERVER_URL, {
