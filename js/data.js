@@ -1,6 +1,6 @@
 // ==========================================
 // KEM STUDIO DATA STORE
-// Auto Updated via Admin Portal on 11:32:10 2/11/2026
+// Auto Updated via Admin Portal on 11:40:43 2/11/2026
 // ==========================================
 
 const productsData = [
@@ -243,13 +243,13 @@ const productsData = [
         "story": {
             "feat1Title": "Engineered for Daily Utility",
             "feat1Desc": "Mô tả tính năng 1...",
-            "feat1Img": "https://images.unsplash.cohttps://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983m/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop",
+            "feat1Img": "https://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983",
             "feat2Title": "Water-Repellent & High Resilience",
             "feat2Desc": "Mô tả tính năng 2...",
-            "feat2Img": "https://images.unsplash.cohttps://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983m/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop",
+            "feat2Img": "https://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983",
             "feat3Title": "Minimalist Silhouette",
             "feat3Desc": "Mô tả tính năng 3...",
-            "feat3Img": "https://images.unsplash.cohttps://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983m/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop"
+            "feat3Img": "https://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983"
         },
         "pairings": [
             {
