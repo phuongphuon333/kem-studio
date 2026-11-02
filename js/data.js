@@ -1,6 +1,6 @@
 // ==========================================
 // KEM STUDIO DATA STORE
-// Auto Updated via Admin Portal on 11:26:52 2/11/2026
+// Auto Updated via Admin Portal on 11:28:02 2/11/2026
 // ==========================================
 
 const productsData = [
@@ -230,9 +230,9 @@ const productsData = [
         "isBestseller": true,
         "colors": [
             {
-                "name": "Nâu bò",
-                "hex": "#5e4e40",
-                "image": "https://images.unsplash.cohttps://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983m/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop"
+                "name": "Nâu",
+                "hex": "#8c7a6b",
+                "image": "https://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983"
             }
         ],
         "specs": {
@@ -254,11 +254,11 @@ const productsData = [
         "pairings": [
             {
                 "title": "Chính diện",
-                "img": "https://images.unsplash.cohttps://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983m/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop"
+                "img": "https://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983"
             },
             {
                 "title": "Góc nghiêng 45°",
-                "img": "https://images.unsplash.cohttps://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983m/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop"
+                "img": "https://down-vn.img.susercontent.com/file/149557ad9ce3b9488f08b592d46c8983"
             }
         ]
     }
