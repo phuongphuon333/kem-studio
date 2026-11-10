@@ -6,6 +6,13 @@ let activeColorIndex = 0;
 let selectedSize = 'M';
 let cart = JSON.parse(localStorage.getItem('kem_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('kem_wishlist')) || [];
+// Cấu hình Cloudinary của Kem
+const CLOUDINARY_CLOUD_NAME = 'vzjiekn2'; // Cloud Name từ ảnh của Kem
+const CLOUDINARY_UPLOAD_PRESET = 'kem_studio_reviews';
+
+// Icon User Dummy mặc định dạng SVG (Không dùng ảnh người thật)
+const DUMMY_USER_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238c7a6b'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-3.8-.85-5.05-2.2.03-1.68 3.37-2.6 5.05-2.6s5.02.92 5.05 2.6C15.8 19.15 14.03 20 12 20z'/%3E%3C/svg%3E";
+
 
 // INITIALIZATION
 window.addEventListener('DOMContentLoaded', () => {
@@ -669,8 +676,7 @@ function renderReviewsOverview() {
     const homeReviewPreview = document.getElementById('home-reviews-preview');
     if (homeReviewPreview) {
         const latest3 = allReviews.slice(0, 3);
-        const dummyAvatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop";
-
+        const dummyAvatar = DUMMY_USER_AVATAR;
         homeReviewPreview.innerHTML = latest3.map(r => `
             <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm space-y-3 flex flex-col justify-between">
                 <div class="space-y-2">
@@ -716,8 +722,7 @@ function renderReviewsList(filterCat = 'all') {
         return;
     }
 
-    const dummyAvatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop";
-
+    const dummyAvatar = DUMMY_USER_AVATAR;
     container.innerHTML = filtered.map(r => `
         <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm space-y-3 flex flex-col justify-between hover:border-tan/50 transition">
             <div class="space-y-3">
@@ -755,14 +760,54 @@ function renderReviewsList(filterCat = 'all') {
 }
 
 // 4. Xử lý khi khách bấm gửi Đánh giá mới từ Modal (Lưu LocalStorage)
-function submitNewReview(e) {
+// Xử lý gửi Đánh Giá mới + Upload 2 Ảnh (Avatar & Feedback) lên Cloudinary
+async function submitNewReview(e) {
     e.preventDefault();
     const author = document.getElementById('rev-author').value.trim();
     const productBought = document.getElementById('rev-product-select').value;
     const stars = parseInt(document.getElementById('rev-stars').value) || 5;
     const comment = document.getElementById('rev-text').value.trim();
+    
+    const avatarInput = document.getElementById('rev-avatar-input');
+    const imageInput = document.getElementById('rev-image-input');
 
-    if (!author || !comment) return alert("Vui lòng điền đầy đủ thông tin!");
+    if (!author || !comment) return alert("Vui lòng điền đầy đủ tên và nhận xét!");
+
+    // Hàm hỗ trợ upload 1 file lên Cloudinary
+    const uploadToCloudinary = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        return data.secure_url || '';
+    };
+
+    let uploadedAvatar = '';
+    let uploadedImage = '';
+
+    // Thông báo cho khách đang tải ảnh
+    const hasFiles = (avatarInput && avatarInput.files.length > 0) || (imageInput && imageInput.files.length > 0);
+    if (hasFiles && typeof showToast === 'function') {
+        showToast("⏳ Đang tải ảnh lên Cloud...");
+    }
+
+    try {
+        // 1. Upload Avatar (nếu khách chọn)
+        if (avatarInput && avatarInput.files.length > 0) {
+            uploadedAvatar = await uploadToCloudinary(avatarInput.files[0]);
+        }
+        // 2. Upload Ảnh đính kèm feedback (nếu khách chọn)
+        if (imageInput && imageInput.files.length > 0) {
+            uploadedImage = await uploadToCloudinary(imageInput.files[0]);
+        }
+    } catch (err) {
+        console.error("Lỗi upload ảnh Cloudinary:", err);
+    }
 
     const newRev = {
         id: 'rev-' + Date.now(),
@@ -770,9 +815,12 @@ function submitNewReview(e) {
         productBought: productBought,
         stars: stars,
         comment: comment,
+        avatar: uploadedAvatar, // Lưu URL avatar nếu có
+        image: uploadedImage,   // Lưu URL ảnh feedback nếu có
         date: new Date().toLocaleDateString('vi-VN')
     };
 
+    // Lưu vào LocalStorage
     let localRevs = [];
     try {
         localRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
@@ -780,6 +828,7 @@ function submitNewReview(e) {
     localRevs.unshift(newRev);
     localStorage.setItem('kem_user_reviews', JSON.stringify(localRevs));
 
+    // Cập nhật giao diện
     renderReviewsOverview();
     renderReviewsList('all');
     closeWriteReviewModal();
