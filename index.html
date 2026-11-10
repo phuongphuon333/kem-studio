@@ -553,6 +553,18 @@
                     <label class="block font-bold text-cream-800 mb-1">Nội dung nhận xét *</label>
                     <textarea id="rev-text" required rows="3" placeholder="Chia sẻ cảm nhận về chất liệu, đường may, phom dáng..." class="w-full p-2.5 rounded-xl border border-cream-200 bg-cream-50"></textarea>
                 </div>
+                <!-- 2 Ô UPLOAD HÌNH ẢNH MỚI THÊM -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div>
+                        <label class="block font-bold text-cream-800 mb-1">Avatar của bạn (Tùy chọn)</label>
+                        <input type="file" id="rev-avatar-input" accept="image/*" class="w-full p-1.5 text-[11px] rounded-xl border border-cream-200 bg-cream-50 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-cream-200 file:text-cream-900">
+                    </div>
+    
+                    <div>
+                        <label class="block font-bold text-cream-800 mb-1">Ảnh thực tế (Tùy chọn)</label>
+                        <input type="file" id="rev-image-input" accept="image/*" class="w-full p-1.5 text-[11px] rounded-xl border border-cream-200 bg-cream-50 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-semibold file:bg-cream-200 file:text-cream-900">
+                    </div>
+                </div>
                 <button type="submit" class="w-full py-3 bg-cream-900 text-white rounded-xl font-bold hover:bg-tan transition">
                     Gửi Đánh Giá
                 </button>
