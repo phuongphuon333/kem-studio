@@ -701,10 +701,22 @@
         }
 
         function deleteReview(id) {
-            if (confirm("Kem có chắc muốn xóa nhận xét này?")) {
+            if (confirm("Xóa nhận xét này?")) {
+                // 1. Xóa trong mảng runtime
                 reviews = reviews.filter(r => r.id !== id);
-                updateDashboardStats(); renderReviewsTable();
-                showToast("Đã xóa đánh giá!");
+        
+                // 2. Cập nhật lại LocalStorage
+                let localUserRevs = [];
+                try {
+                    localUserRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
+                } catch(e) {}
+                localUserRevs = localUserRevs.filter(r => r.id !== id);
+                localStorage.setItem('kem_user_reviews', JSON.stringify(localUserRevs));
+        
+                // 3. Lưu và render lại bảng
+                saveData();
+                renderReviewsTable();
+                showToast("Đã xóa nhận xét!");
             }
         }
         
