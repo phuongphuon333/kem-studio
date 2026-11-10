@@ -588,6 +588,40 @@ function showToast(msg) {
         toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
     }, 3000);
 }
+// Thêm hàm này vào file js/app.js để load động tất cả Banner từ js/data.js
+function loadDynamicBanners() {
+    if (typeof bannersData === 'undefined') return;
+
+    // 1. Hero Banner
+    const heroTitle = document.querySelector('#section-home h1');
+    const heroTag = document.querySelector('#section-home span');
+    const heroDesc = document.querySelector('#section-home p');
+    const heroImg = document.querySelector('#section-home img');
+    if (heroTitle && bannersData.hero) {
+        if (bannersData.hero.title) heroTitle.innerText = bannersData.hero.title;
+        if (bannersData.hero.tag) heroTag.innerText = bannersData.hero.tag;
+        if (bannersData.hero.description) heroDesc.innerText = bannersData.hero.description;
+        if (bannersData.hero.image) heroImg.src = bannersData.hero.image;
+    }
+
+    // 2. Banner Eco Brand Story (Live Sustainably)
+    const storyBox = document.querySelector('.bg-cream-900.text-cream-50.rounded-3xl');
+    if (storyBox && bannersData.story) {
+        const sTag = storyBox.querySelector('span');
+        const sTitle = storyBox.querySelector('h3');
+        const sDesc = storyBox.querySelector('p');
+        const sBtn = storyBox.querySelector('button');
+        if (sTag && bannersData.story.tag) sTag.innerText = bannersData.story.tag;
+        if (sTitle && bannersData.story.title) sTitle.innerText = bannersData.story.title;
+        if (sDesc && bannersData.story.description) sDesc.innerText = bannersData.story.description;
+        if (sBtn && bannersData.story.buttonText) sBtn.innerText = bannersData.story.buttonText;
+    }
+}
+
+// Gọi hàm loadDynamicBanners() trong window.onload hoặc DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    loadDynamicBanners();
+});
 // Hàm kết nối API Server Render để lưu thông tin vào Google Sheets
 async function submitOrderToSheet(customerData) {
     // Thay URL Render thực tế của Kem vào đây
