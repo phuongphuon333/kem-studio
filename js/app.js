@@ -57,22 +57,10 @@ function renderHomeSections() {
 
     document.getElementById('home-just-for-you-grid').innerHTML = productsData.slice(0, 2).map(p => createProductCardHTML(p)).join('');
 
-    document.getElementById('home-reviews-preview').innerHTML = reviewsData.slice(0, 3).map(r => `
-        <div class="bg-white p-5 rounded-2xl border border-cream-200 space-y-3 shadow-sm">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <img src="${r.avatar}" class="w-8 h-8 rounded-full object-cover">
-                    <div>
-                        <h4 class="text-xs font-bold text-cream-900">${r.author}</h4>
-                        <span class="text-[9px] text-green-700 font-semibold bg-green-50 px-1.5 py-0.5 rounded">Verified Buyer</span>
-                    </div>
-                </div>
-                <span class="text-yellow-500 text-xs">★★★★★</span>
-            </div>
-            <p class="text-xs text-cream-800 italic">"${r.comment}"</p>
-            <span class="block text-[10px] text-tan font-semibold">${r.productBought}</span>
-        </div>
-    `).join('');
+    document.getElementById('home-just-for-you-grid').innerHTML = productsData.slice(0, 2).map(p => createProductCardHTML(p)).join('');
+
+    // Gọi hàm render Đánh giá động mới nhất tại đây
+    renderReviewsOverview();
 }
 
 // PRODUCT CARD GENERATOR
