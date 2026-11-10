@@ -722,22 +722,32 @@
         }
 
         function deleteReview(id) {
-            if (confirm("Xóa nhận xét này?")) {
-                // 1. Xóa trong mảng runtime
-                reviews = reviews.filter(r => r.id !== id);
+            if (!id) return;
+            
+            if (confirm("Kem có chắc muốn xóa nhận xét này không?")) {
+                // 1. Xóa trong mảng dữ liệu đang hiển thị của Admin
+                reviews = reviews.filter(r => String(r.id) !== String(id));
         
-                // 2. Cập nhật lại LocalStorage
+                // 2. Xóa trong LocalStorage của máy khách (nếu có)
                 let localUserRevs = [];
                 try {
                     localUserRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
-                } catch(e) {}
-                localUserRevs = localUserRevs.filter(r => r.id !== id);
-                localStorage.setItem('kem_user_reviews', JSON.stringify(localUserRevs));
+                    localUserRevs = localUserRevs.filter(r => String(r.id) !== String(id));
+                    localStorage.setItem('kem_user_reviews', JSON.stringify(localUserRevs));
+                } catch(e) {
+                    console.error("Lỗi xóa LocalStorage:", e);
+                }
         
-                // 3. Lưu và render lại bảng
-                saveData();
-                renderReviewsTable();
-                showToast("Đã xóa nhận xét!");
+                // 3. Cập nhật lại số liệu Thống kê & Render lại Bảng Đánh Giá lập tức
+                if (typeof updateDashboardStats === 'function') updateDashboardStats();
+                if (typeof renderReviewsTable === 'function') renderReviewsTable();
+                
+                // 4. Báo Toast thông báo
+                if (typeof showToast === 'function') {
+                    showToast("🗑️ Đã xóa nhận xét thành công!");
+                } else {
+                    alert("Đã xóa nhận xét!");
+                }
             }
         }
         
