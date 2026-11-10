@@ -1,6 +1,6 @@
 // ==========================================
 // KEM STUDIO DATA STORE
-// Auto Updated via Admin Portal on 11:22:18 10/11/2026
+// Auto Updated via Admin Portal on 16:00:58 10/11/2026
 // ==========================================
 
 const productsData = [
@@ -263,19 +263,22 @@ const productsData = [
         ]
     }
 ];
-
 let reviewsData = [
     {
-        "id": "rev-1",
-        "author": "Minh Thảo",
-        "productBought": "Túi Canvas Grand Studio Tote",
-        "category": "canvas-bag",
+        "id": "rev-1794298275263",
+        "author": "Phuong",
+        "productBought": "Áo Khoác Dù Essential Windbreaker",
+        "stars": 3,
+        "comment": "good",
+        "date": "10/11/2026"
+    },
+    {
+        "id": "rev-1794292256250",
+        "author": "Phuong",
+        "productBought": "Quần Túi Hộp Urban Cargo Pants",
         "stars": 5,
-        "date": "2 ngày trước",
-        "verified": true,
-        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop",
-        "comment": "Túi siêu dày dặn, phom đứng rất đẹp. Mình đựng vừa laptop 15.6 inch mà quai da đeo êm vai lắm. Rất hài lòng với màu Khaki!",
-        "image": "https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=300&auto=format&fit=crop"
+        "comment": "ổn",
+        "date": "10/11/2026"
     },
     {
         "id": "rev-2",
@@ -302,7 +305,6 @@ let reviewsData = [
         "image": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=300&auto=format&fit=crop"
     }
 ];
-
 let bannersData = {
     "hero": {
         "tag": "NEW SEASON LOOKBOOK",
