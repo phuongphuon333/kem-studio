@@ -624,36 +624,46 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// KEM STUDIO - DYNAMIC REVIEWS ENGINE (OPTIMIZED)
+// KEM STUDIO - DYNAMIC REVIEWS ENGINE
 // ==========================================
 
-// Khởi chạy khi nạp trang
+// Khởi chạy Reviews khi nạp trang
 document.addEventListener('DOMContentLoaded', () => {
     renderReviewsOverview();
     renderReviewsList('all');
 });
 
-// 1. Nạp & Gộp toàn bộ Đánh giá (LocalStorage + data.js) và sắp xếp MỚI NHẤT lên đầu
+// 1. Nạp & Gộp toàn bộ Đánh giá (LocalStorage + data.js) - Ưu tiên REVIEW MỚI NHẤT lên đầu
 function getMergedReviews() {
     let localRevs = [];
     try {
         localRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
     } catch(e) { localRevs = []; }
-    
+
     const defaultRevs = (typeof reviewsData !== 'undefined' && Array.isArray(reviewsData)) ? reviewsData : [];
-    
-    // Gộp dữ liệu
+
+    // Gộp tất cả đánh giá
     const allRevs = [...localRevs, ...defaultRevs];
 
-    // Sắp xếp ưu tiên các review mới nhất dựa trên id timestamp hoặc thứ tự
-    return allRevs.sort((a, b) => {
-        const idA = parseInt(String(a.id).replace(/\D/g, '')) || 0;
-        const idB = parseInt(String(b.id).replace(/\D/g, '')) || 0;
-        return idB - idA;
+    // Loại bỏ các review trùng lặp theo ID (nếu có)
+    const uniqueMap = new Map();
+    allRevs.forEach(r => {
+        if (r && r.id && !uniqueMap.has(r.id)) {
+            uniqueMap.set(r.id, r);
+        }
+    });
+
+    const result = Array.from(uniqueMap.values());
+
+    // Sắp xếp đưa Review Mới Nhất lên đầu (dựa theo ID timestamp hoặc thời gian)
+    return result.sort((a, b) => {
+        const timeA = parseInt(String(a.id).replace(/\D/g, '')) || 0;
+        const timeB = parseInt(String(b.id).replace(/\D/g, '')) || 0;
+        return timeB - timeA;
     });
 }
 
-// 2. Tự động tính toán Điểm trung bình & Hiển thị Top 3 Mới Nhất ở Trang Chủ
+// 2. Tự động tính Điểm & Render 3 Review MỚI NHẤT ra Trang Chủ dạng List Thẻ Gọn Gàng
 function renderReviewsOverview() {
     const allReviews = getMergedReviews();
     if (allReviews.length === 0) return;
@@ -667,7 +677,7 @@ function renderReviewsOverview() {
     if (scoreElem) scoreElem.innerText = avgRating;
     if (countElem) countElem.innerText = `Dựa trên ${totalReviews} nhận xét đã xác thực`;
 
-    // Hiển thị 3 Đánh giá MỚI NHẤT ra Trang Chủ
+    // Render 3 Đánh Giá Mới Nhất lên Trang Chủ (Chuẩn thiết kế gọn đẹp)
     const homeReviewPreview = document.getElementById('home-reviews-preview');
     if (homeReviewPreview) {
         const latest3 = allReviews.slice(0, 3);
@@ -676,28 +686,22 @@ function renderReviewsOverview() {
         homeReviewPreview.innerHTML = latest3.map(r => `
             <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm space-y-3 flex flex-col justify-between">
                 <div class="space-y-2">
-                    <div class="flex justify-between items-center">
+                    <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <img src="${r.avatar || dummyAvatar}" class="w-7 h-7 rounded-full object-cover border border-cream-200">
+                            <img src="${r.avatar || dummyAvatar}" class="w-8 h-8 rounded-full object-cover border border-cream-200">
                             <div>
-                                <span class="font-bold text-xs text-cream-900 block leading-tight">${r.author}</span>
-                                <span class="text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded inline-block">Đã mua hàng</span>
+                                <h4 class="text-xs font-bold text-cream-900 leading-tight">${r.author}</h4>
+                                <span class="text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.5 rounded inline-block mt-0.5">Verified Buyer</span>
                             </div>
                         </div>
                         <span class="text-amber-500 text-xs">${'★'.repeat(r.stars || 5)}</span>
                     </div>
 
                     <p class="text-xs text-cream-800 italic line-clamp-3">"${r.comment}"</p>
-
-                    ${r.image ? `
-                        <div class="h-28 rounded-xl overflow-hidden bg-cream-100 border border-cream-200 mt-2">
-                            <img src="${r.image}" class="w-full h-full object-cover">
-                        </div>
-                    ` : ''}
                 </div>
 
-                <div class="flex justify-between items-center text-[10px] text-tan font-semibold pt-2 border-t border-cream-100">
-                    <span class="truncate max-w-[150px]">${r.productBought}</span>
+                <div class="pt-2 border-t border-cream-100 flex items-center justify-between text-[10px] text-tan font-semibold">
+                    <span class="truncate max-w-[160px]">${r.productBought}</span>
                     <span class="text-cream-400 font-normal">${r.date || 'Vừa xong'}</span>
                 </div>
             </div>
@@ -705,12 +709,12 @@ function renderReviewsOverview() {
     }
 }
 
-// 3. Render danh sách Đánh giá (Tối ưu Grid xem được nhiều hơn & Có kèm hình ảnh nếu có)
+// 3. Render trang Đánh Giá Đầy Đủ (Đầy đủ Avatar, Ảnh đính kèm & Chi tiết)
 function renderReviewsList(filterCat = 'all') {
     const container = document.getElementById('full-reviews-list');
     if (!container) return;
 
-    // Ép container về dạng Grid để hiển thị nhiều review hơn (2 cột mobile, 3 cột desktop)
+    // Giao diện Lưới Responsive xem được nhiều Review
     container.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6";
 
     const allReviews = getMergedReviews();
@@ -731,7 +735,7 @@ function renderReviewsList(filterCat = 'all') {
             <div class="space-y-3">
                 <div class="flex justify-between items-start">
                     <div class="flex items-center gap-2.5">
-                        <img src="${r.avatar || dummyAvatar}" class="w-8 h-8 rounded-full object-cover border border-cream-200">
+                        <img src="${r.avatar || dummyAvatar}" class="w-9 h-9 rounded-full object-cover border border-cream-200">
                         <div>
                             <h4 class="font-bold text-cream-900 text-xs leading-tight">${r.author}</h4>
                             <span class="text-[9px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded-full inline-block mt-0.5">
@@ -762,7 +766,7 @@ function renderReviewsList(filterCat = 'all') {
     `).join('');
 }
 
-// 4. Xử lý khi khách bấm gửi Đánh giá mới (Đã cá nhân hóa lời cảm ơn)
+// 4. Xử lý khi khách bấm gửi Đánh giá mới từ Modal (Lưu LocalStorage)
 function submitNewReview(e) {
     e.preventDefault();
     const author = document.getElementById('rev-author').value.trim();
@@ -781,7 +785,6 @@ function submitNewReview(e) {
         date: new Date().toLocaleDateString('vi-VN')
     };
 
-    // Lưu vào LocalStorage của trình duyệt
     let localRevs = [];
     try {
         localRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
@@ -789,13 +792,11 @@ function submitNewReview(e) {
     localRevs.unshift(newRev);
     localStorage.setItem('kem_user_reviews', JSON.stringify(localRevs));
 
-    // Cập nhật lại giao diện ngay lập tức
     renderReviewsOverview();
     renderReviewsList('all');
     closeWriteReviewModal();
     document.getElementById('write-review-modal').querySelector('form').reset();
 
-    // Thông báo cảm ơn đích danh tên người đánh giá
     const thankMsg = `🎉 Cảm ơn ${author} đã gửi đánh giá cho KEM Studio!`;
     if (typeof showToast === 'function') {
         showToast(thankMsg);
@@ -811,7 +812,7 @@ function filterReviews(cat) {
     });
     const activeBtn = document.getElementById(`rev-tab-${cat}`);
     if (activeBtn) activeBtn.className = "rev-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-cream-900 text-white";
-    
+
     renderReviewsList(cat);
 }
 
