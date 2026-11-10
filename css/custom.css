@@ -11,6 +11,18 @@ body {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: #FAF7F2; }
 ::-webkit-scrollbar-thumb { background: #D8C7A9; border-radius: 9999px; }
+
+/* Ép tất cả lưới sản phẩm hiển thị 2 cột trên màn hình điện thoại (< 640px) */
+@media (max-width: 639px) {
+    #home-new-arrivals,
+    #home-bestsellers-grid,
+    #home-just-for-you-grid,
+    #shop-products-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.75rem !important; /* 12px gap giúp thẻ vừa vặn màn hình iPhone mini */
+    }
+}
     
 .no-scrollbar::-webkit-scrollbar {
     display: none;
