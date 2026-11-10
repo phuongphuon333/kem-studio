@@ -624,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// KEM STUDIO - DYNAMIC REVIEWS ENGINE
+// KEM STUDIO - DYNAMIC REVIEWS & PERSISTENCE
 // ==========================================
 
 // Khởi chạy Reviews khi tải trang
@@ -633,15 +633,25 @@ document.addEventListener('DOMContentLoaded', () => {
     renderReviewsList('all');
 });
 
-// 1. Tự động tính toán & hiển thị Tổng quan điểm Đánh giá
+// 1. Nạp đánh giá từ LocalStorage (nếu có) ghép vào reviewsData gốc khi tải trang
+function getMergedReviews() {
+    let localRevs = [];
+    try {
+        localRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
+    } catch(e) { localRevs = []; }
+    
+    // Gộp đánh giá mới lưu ở máy khách lên đầu danh sách
+    return [...localRevs, ...(typeof reviewsData !== 'undefined' ? reviewsData : [])];
+}
+
+// 2. Tự động tính toán & hiển thị Tổng quan điểm Đánh giá
 function renderReviewsOverview() {
-    if (typeof reviewsData === 'undefined' || reviewsData.length === 0) return;
+    const allReviews = getMergedReviews();
+    if (allReviews.length === 0) return;
 
-    const totalReviews = reviewsData.length;
-    // Tính điểm trung bình (mặc định 5 sao nếu rỗng)
-    const avgRating = (reviewsData.reduce((acc, r) => acc + (r.stars || 5), 0) / totalReviews).toFixed(1);
+    const totalReviews = allReviews.length;
+    const avgRating = (allReviews.reduce((acc, r) => acc + (r.stars || 5), 0) / totalReviews).toFixed(1);
 
-    // Cập nhật số liệu lên giao diện
     const scoreElem = document.querySelector('#section-reviews .serif-title.text-5xl');
     const countElem = document.querySelector('#section-reviews p.text-xs.text-cream-800');
     
@@ -651,7 +661,7 @@ function renderReviewsOverview() {
     // Render Preview 3 đánh giá mới nhất ở Trang Chủ
     const homeReviewPreview = document.getElementById('home-reviews-preview');
     if (homeReviewPreview) {
-        const latest3 = reviewsData.slice(0, 3);
+        const latest3 = allReviews.slice(0, 3);
         homeReviewPreview.innerHTML = latest3.map(r => `
             <div class="bg-white p-6 rounded-2xl border border-cream-200 shadow-sm space-y-3">
                 <div class="flex justify-between items-center">
@@ -668,14 +678,14 @@ function renderReviewsOverview() {
     }
 }
 
-// 2. Render danh sách Đánh giá đầy đủ (có bộ lọc Danh mục)
+// 3. Render danh sách Đánh giá đầy đủ (có bộ lọc Danh mục)
 function renderReviewsList(filterCat = 'all') {
     const container = document.getElementById('full-reviews-list');
-    if (!container || typeof reviewsData === 'undefined') return;
+    if (!container) return;
 
-    const filtered = reviewsData.filter(r => {
+    const allReviews = getMergedReviews();
+    const filtered = allReviews.filter(r => {
         if (filterCat === 'all') return true;
-        // Lọc theo slug category nếu có
         return r.category === filterCat || (r.productBought && r.productBought.toLowerCase().includes(filterCat));
     });
 
@@ -701,7 +711,7 @@ function renderReviewsList(filterCat = 'all') {
     `).join('');
 }
 
-// 3. Xử lý khi khách gửi Đánh giá mới từ Modal
+// 4. Xử lý khi khách bấm gửi Đánh giá mới (Lưu Vĩnh Viễn vào LocalStorage)
 function submitNewReview(e) {
     e.preventDefault();
     const author = document.getElementById('rev-author').value.trim();
@@ -720,16 +730,20 @@ function submitNewReview(e) {
         date: new Date().toLocaleDateString('vi-VN')
     };
 
-    // Thêm vào mảng dữ liệu tạm
-    reviewsData.unshift(newRev);
+    // Lưu vào LocalStorage của trình duyệt
+    let localRevs = [];
+    try {
+        localRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
+    } catch(err) { localRevs = []; }
+    localRevs.unshift(newRev);
+    localStorage.setItem('kem_user_reviews', JSON.stringify(localRevs));
 
-    // Cập nhật lại giao diện
+    // Cập nhật lại giao diện ngay lập tức
     renderReviewsOverview();
     renderReviewsList('all');
     closeWriteReviewModal();
     document.getElementById('write-review-modal').querySelector('form').reset();
 
-    // Thông báo cho khách
     if (typeof showToast === 'function') {
         showToast("🎉 Cảm ơn Kem/Khách hàng đã gửi đánh giá!");
     } else {
@@ -737,7 +751,7 @@ function submitNewReview(e) {
     }
 }
 
-// 4. Chuyển Tab bộ lọc Đánh giá
+// 5. Chuyển Tab bộ lọc Đánh giá
 function filterReviews(cat) {
     document.querySelectorAll('.rev-btn').forEach(btn => {
         btn.className = "rev-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-cream-200 text-cream-900";
