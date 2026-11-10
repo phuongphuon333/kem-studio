@@ -374,8 +374,29 @@
     </div>
 
     <script>
+            // Hàm gộp toàn bộ đánh giá từ LocalStorage (máy khách) VÀ file data.js
+        function getMergedAdminReviews() {
+            let localUserRevs = [];
+            try {
+                localUserRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
+            } catch(e) { localUserRevs = []; }
+        
+            const defaultRevs = (typeof reviewsData !== 'undefined' && Array.isArray(reviewsData)) ? reviewsData : [];
+            
+            // Gộp và loại bỏ trùng lặp theo ID
+            const mergedMap = new Map();
+            [...localUserRevs, ...defaultRevs].forEach(r => {
+                if (r && r.id && !mergedMap.has(r.id)) {
+                    mergedMap.set(r.id, r);
+                }
+            });
+        
+            return Array.from(mergedMap.values());
+        }
+        // Khởi tạo danh sách reviews
+        let reviews = getMergedAdminReviews();
         let products = (typeof productsData !== 'undefined' && productsData.length > 0) ? JSON.parse(JSON.stringify(productsData)) : [];
-        let reviews = (typeof reviewsData !== 'undefined' && reviewsData.length > 0) ? JSON.parse(JSON.stringify(reviewsData)) : [];
+        //let reviews = (typeof reviewsData !== 'undefined' && reviewsData.length > 0) ? JSON.parse(JSON.stringify(reviewsData)) : [];
         let banners = (typeof bannersData !== 'undefined') ? JSON.parse(JSON.stringify(bannersData)) : {
             hero: { tag: "NEW SEASON LOOKBOOK", title: "Wear Your Story.\nExpress Your Style.", description: "Mô tả...", image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d", buttonText: "Shop Collection" },
             promoLeft: { tag: "ƯU ĐÃI ĐẾN 30%", title: "Minimalist Streetwear", description: "Bộ sưu tập quần túi hộp...", image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7", buttonText: "Khám Phá Ngay" },
@@ -720,28 +741,7 @@
             }
         }
         
-        // Hàm gộp toàn bộ đánh giá từ LocalStorage (máy khách) VÀ file data.js
-        function getMergedAdminReviews() {
-            let localUserRevs = [];
-            try {
-                localUserRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
-            } catch(e) { localUserRevs = []; }
-        
-            const defaultRevs = (typeof reviewsData !== 'undefined' && Array.isArray(reviewsData)) ? reviewsData : [];
-            
-            // Gộp và loại bỏ trùng lặp theo ID
-            const mergedMap = new Map();
-            [...localUserRevs, ...defaultRevs].forEach(r => {
-                if (r && r.id && !mergedMap.has(r.id)) {
-                    mergedMap.set(r.id, r);
-                }
-            });
-        
-            return Array.from(mergedMap.values());
-        }
-        // Khởi tạo danh sách reviews
-        let reviews = getMergedAdminReviews();
-        
+    
         function openConfigModal() {
             document.getElementById('cfg-owner').value = localStorage.getItem('kem_gh_owner') || 'phuongphuon333';
             document.getElementById('cfg-repo').value = localStorage.getItem('kem_gh_repo') || '';
