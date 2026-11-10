@@ -624,27 +624,36 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ==========================================
-// KEM STUDIO - DYNAMIC REVIEWS & PERSISTENCE
+// KEM STUDIO - DYNAMIC REVIEWS ENGINE (OPTIMIZED)
 // ==========================================
 
-// Khởi chạy Reviews khi tải trang
+// Khởi chạy khi nạp trang
 document.addEventListener('DOMContentLoaded', () => {
     renderReviewsOverview();
     renderReviewsList('all');
 });
 
-// 1. Nạp đánh giá từ LocalStorage (nếu có) ghép vào reviewsData gốc khi tải trang
+// 1. Nạp & Gộp toàn bộ Đánh giá (LocalStorage + data.js) và sắp xếp MỚI NHẤT lên đầu
 function getMergedReviews() {
     let localRevs = [];
     try {
         localRevs = JSON.parse(localStorage.getItem('kem_user_reviews')) || [];
     } catch(e) { localRevs = []; }
     
-    // Gộp đánh giá mới lưu ở máy khách lên đầu danh sách
-    return [...localRevs, ...(typeof reviewsData !== 'undefined' ? reviewsData : [])];
+    const defaultRevs = (typeof reviewsData !== 'undefined' && Array.isArray(reviewsData)) ? reviewsData : [];
+    
+    // Gộp dữ liệu
+    const allRevs = [...localRevs, ...defaultRevs];
+
+    // Sắp xếp ưu tiên các review mới nhất dựa trên id timestamp hoặc thứ tự
+    return allRevs.sort((a, b) => {
+        const idA = parseInt(String(a.id).replace(/\D/g, '')) || 0;
+        const idB = parseInt(String(b.id).replace(/\D/g, '')) || 0;
+        return idB - idA;
+    });
 }
 
-// 2. Tự động tính toán & hiển thị Tổng quan điểm Đánh giá
+// 2. Tự động tính toán Điểm trung bình & Hiển thị Top 3 Mới Nhất ở Trang Chủ
 function renderReviewsOverview() {
     const allReviews = getMergedReviews();
     if (allReviews.length === 0) return;
@@ -658,30 +667,51 @@ function renderReviewsOverview() {
     if (scoreElem) scoreElem.innerText = avgRating;
     if (countElem) countElem.innerText = `Dựa trên ${totalReviews} nhận xét đã xác thực`;
 
-    // Render Preview 3 đánh giá mới nhất ở Trang Chủ
+    // Hiển thị 3 Đánh giá MỚI NHẤT ra Trang Chủ
     const homeReviewPreview = document.getElementById('home-reviews-preview');
     if (homeReviewPreview) {
         const latest3 = allReviews.slice(0, 3);
+        const dummyAvatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop";
+
         homeReviewPreview.innerHTML = latest3.map(r => `
-            <div class="bg-white p-6 rounded-2xl border border-cream-200 shadow-sm space-y-3">
-                <div class="flex justify-between items-center">
-                    <span class="font-bold text-sm text-cream-900">${r.author}</span>
-                    <span class="text-amber-500 text-xs">${'★'.repeat(r.stars || 5)}</span>
+            <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm space-y-3 flex flex-col justify-between">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <img src="${r.avatar || dummyAvatar}" class="w-7 h-7 rounded-full object-cover border border-cream-200">
+                            <div>
+                                <span class="font-bold text-xs text-cream-900 block leading-tight">${r.author}</span>
+                                <span class="text-[9px] text-emerald-700 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded inline-block">Đã mua hàng</span>
+                            </div>
+                        </div>
+                        <span class="text-amber-500 text-xs">${'★'.repeat(r.stars || 5)}</span>
+                    </div>
+
+                    <p class="text-xs text-cream-800 italic line-clamp-3">"${r.comment}"</p>
+
+                    ${r.image ? `
+                        <div class="h-28 rounded-xl overflow-hidden bg-cream-100 border border-cream-200 mt-2">
+                            <img src="${r.image}" class="w-full h-full object-cover">
+                        </div>
+                    ` : ''}
                 </div>
-                <p class="text-xs text-cream-800 italic">"${r.comment}"</p>
+
                 <div class="flex justify-between items-center text-[10px] text-tan font-semibold pt-2 border-t border-cream-100">
-                    <span>${r.productBought}</span>
-                    <span class="text-cream-400">${r.date}</span>
+                    <span class="truncate max-w-[150px]">${r.productBought}</span>
+                    <span class="text-cream-400 font-normal">${r.date || 'Vừa xong'}</span>
                 </div>
             </div>
         `).join('');
     }
 }
 
-// 3. Render danh sách Đánh giá đầy đủ (có bộ lọc Danh mục)
+// 3. Render danh sách Đánh giá (Tối ưu Grid xem được nhiều hơn & Có kèm hình ảnh nếu có)
 function renderReviewsList(filterCat = 'all') {
     const container = document.getElementById('full-reviews-list');
     if (!container) return;
+
+    // Ép container về dạng Grid để hiển thị nhiều review hơn (2 cột mobile, 3 cột desktop)
+    container.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6";
 
     const allReviews = getMergedReviews();
     const filtered = allReviews.filter(r => {
@@ -690,28 +720,49 @@ function renderReviewsList(filterCat = 'all') {
     });
 
     if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center py-8 text-cream-800 text-xs">Chưa có đánh giá nào cho mục này.</div>`;
+        container.innerHTML = `<div class="col-span-full text-center py-12 text-cream-800 text-xs">Chưa có đánh giá nào cho mục này.</div>`;
         return;
     }
 
+    const dummyAvatar = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=100&auto=format&fit=crop";
+
     container.innerHTML = filtered.map(r => `
-        <div class="bg-white p-6 rounded-2xl border border-cream-200 shadow-sm space-y-3">
-            <div class="flex justify-between items-start">
-                <div>
-                    <h4 class="font-bold text-cream-900 text-sm">${r.author} <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full ml-2"><i class="fa-solid fa-circle-check"></i> Đã mua hàng</span></h4>
-                    <span class="text-[11px] text-tan font-medium">${r.productBought}</span>
+        <div class="bg-white p-5 rounded-2xl border border-cream-200 shadow-sm space-y-3 flex flex-col justify-between hover:border-tan/50 transition">
+            <div class="space-y-3">
+                <div class="flex justify-between items-start">
+                    <div class="flex items-center gap-2.5">
+                        <img src="${r.avatar || dummyAvatar}" class="w-8 h-8 rounded-full object-cover border border-cream-200">
+                        <div>
+                            <h4 class="font-bold text-cream-900 text-xs leading-tight">${r.author}</h4>
+                            <span class="text-[9px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded-full inline-block mt-0.5">
+                                <i class="fa-solid fa-circle-check text-[8px]"></i> Đã mua hàng
+                            </span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-amber-500 text-xs">${'★'.repeat(r.stars || 5)}</div>
+                        <span class="text-[10px] text-cream-400">${r.date || 'Gần đây'}</span>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <div class="text-amber-500 text-xs">${'★'.repeat(r.stars || 5)}</div>
-                    <span class="text-[10px] text-cream-400">${r.date}</span>
-                </div>
+
+                <p class="text-xs text-cream-800 leading-relaxed">${r.comment}</p>
+
+                ${r.image ? `
+                    <div class="h-36 rounded-xl overflow-hidden bg-cream-100 border border-cream-200 mt-2">
+                        <img src="${r.image}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
+                    </div>
+                ` : ''}
             </div>
-            <p class="text-xs text-cream-800 leading-relaxed">${r.comment}</p>
+
+            <div class="pt-2 border-t border-cream-100 flex items-center justify-between text-[11px] text-tan font-semibold mt-2">
+                <span class="truncate max-w-[180px]">${r.productBought}</span>
+                <button class="text-cream-400 hover:text-tan text-[10px] font-normal transition"><i class="fa-regular fa-thumbs-up mr-1"></i>Hữu ích</button>
+            </div>
         </div>
     `).join('');
 }
 
-// 4. Xử lý khi khách bấm gửi Đánh giá mới (Lưu Vĩnh Viễn vào LocalStorage)
+// 4. Xử lý khi khách bấm gửi Đánh giá mới (Đã cá nhân hóa lời cảm ơn)
 function submitNewReview(e) {
     e.preventDefault();
     const author = document.getElementById('rev-author').value.trim();
@@ -744,10 +795,12 @@ function submitNewReview(e) {
     closeWriteReviewModal();
     document.getElementById('write-review-modal').querySelector('form').reset();
 
+    // Thông báo cảm ơn đích danh tên người đánh giá
+    const thankMsg = `🎉 Cảm ơn ${author} đã gửi đánh giá cho KEM Studio!`;
     if (typeof showToast === 'function') {
-        showToast("🎉 Cảm ơn Kem/Khách hàng đã gửi đánh giá!");
+        showToast(thankMsg);
     } else {
-        alert("🎉 Cảm ơn Kem đã gửi đánh giá!");
+        alert(thankMsg);
     }
 }
 
