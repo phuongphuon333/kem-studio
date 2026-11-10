@@ -622,6 +622,139 @@ function loadDynamicBanners() {
 document.addEventListener('DOMContentLoaded', () => {
     loadDynamicBanners();
 });
+
+// ==========================================
+// KEM STUDIO - DYNAMIC REVIEWS ENGINE
+// ==========================================
+
+// Khởi chạy Reviews khi tải trang
+document.addEventListener('DOMContentLoaded', () => {
+    renderReviewsOverview();
+    renderReviewsList('all');
+});
+
+// 1. Tự động tính toán & hiển thị Tổng quan điểm Đánh giá
+function renderReviewsOverview() {
+    if (typeof reviewsData === 'undefined' || reviewsData.length === 0) return;
+
+    const totalReviews = reviewsData.length;
+    // Tính điểm trung bình (mặc định 5 sao nếu rỗng)
+    const avgRating = (reviewsData.reduce((acc, r) => acc + (r.stars || 5), 0) / totalReviews).toFixed(1);
+
+    // Cập nhật số liệu lên giao diện
+    const scoreElem = document.querySelector('#section-reviews .serif-title.text-5xl');
+    const countElem = document.querySelector('#section-reviews p.text-xs.text-cream-800');
+    
+    if (scoreElem) scoreElem.innerText = avgRating;
+    if (countElem) countElem.innerText = `Dựa trên ${totalReviews} nhận xét đã xác thực`;
+
+    // Render Preview 3 đánh giá mới nhất ở Trang Chủ
+    const homeReviewPreview = document.getElementById('home-reviews-preview');
+    if (homeReviewPreview) {
+        const latest3 = reviewsData.slice(0, 3);
+        homeReviewPreview.innerHTML = latest3.map(r => `
+            <div class="bg-white p-6 rounded-2xl border border-cream-200 shadow-sm space-y-3">
+                <div class="flex justify-between items-center">
+                    <span class="font-bold text-sm text-cream-900">${r.author}</span>
+                    <span class="text-amber-500 text-xs">${'★'.repeat(r.stars || 5)}</span>
+                </div>
+                <p class="text-xs text-cream-800 italic">"${r.comment}"</p>
+                <div class="flex justify-between items-center text-[10px] text-tan font-semibold pt-2 border-t border-cream-100">
+                    <span>${r.productBought}</span>
+                    <span class="text-cream-400">${r.date}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+// 2. Render danh sách Đánh giá đầy đủ (có bộ lọc Danh mục)
+function renderReviewsList(filterCat = 'all') {
+    const container = document.getElementById('full-reviews-list');
+    if (!container || typeof reviewsData === 'undefined') return;
+
+    const filtered = reviewsData.filter(r => {
+        if (filterCat === 'all') return true;
+        // Lọc theo slug category nếu có
+        return r.category === filterCat || (r.productBought && r.productBought.toLowerCase().includes(filterCat));
+    });
+
+    if (filtered.length === 0) {
+        container.innerHTML = `<div class="text-center py-8 text-cream-800 text-xs">Chưa có đánh giá nào cho mục này.</div>`;
+        return;
+    }
+
+    container.innerHTML = filtered.map(r => `
+        <div class="bg-white p-6 rounded-2xl border border-cream-200 shadow-sm space-y-3">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h4 class="font-bold text-cream-900 text-sm">${r.author} <span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full ml-2"><i class="fa-solid fa-circle-check"></i> Đã mua hàng</span></h4>
+                    <span class="text-[11px] text-tan font-medium">${r.productBought}</span>
+                </div>
+                <div class="text-right">
+                    <div class="text-amber-500 text-xs">${'★'.repeat(r.stars || 5)}</div>
+                    <span class="text-[10px] text-cream-400">${r.date}</span>
+                </div>
+            </div>
+            <p class="text-xs text-cream-800 leading-relaxed">${r.comment}</p>
+        </div>
+    `).join('');
+}
+
+// 3. Xử lý khi khách gửi Đánh giá mới từ Modal
+function submitNewReview(e) {
+    e.preventDefault();
+    const author = document.getElementById('rev-author').value.trim();
+    const productBought = document.getElementById('rev-product-select').value;
+    const stars = parseInt(document.getElementById('rev-stars').value) || 5;
+    const comment = document.getElementById('rev-text').value.trim();
+
+    if (!author || !comment) return alert("Vui lòng điền đầy đủ thông tin!");
+
+    const newRev = {
+        id: 'rev-' + Date.now(),
+        author: author,
+        productBought: productBought,
+        stars: stars,
+        comment: comment,
+        date: new Date().toLocaleDateString('vi-VN')
+    };
+
+    // Thêm vào mảng dữ liệu tạm
+    reviewsData.unshift(newRev);
+
+    // Cập nhật lại giao diện
+    renderReviewsOverview();
+    renderReviewsList('all');
+    closeWriteReviewModal();
+    document.getElementById('write-review-modal').querySelector('form').reset();
+
+    // Thông báo cho khách
+    if (typeof showToast === 'function') {
+        showToast("🎉 Cảm ơn Kem/Khách hàng đã gửi đánh giá!");
+    } else {
+        alert("🎉 Cảm ơn Kem đã gửi đánh giá!");
+    }
+}
+
+// 4. Chuyển Tab bộ lọc Đánh giá
+function filterReviews(cat) {
+    document.querySelectorAll('.rev-btn').forEach(btn => {
+        btn.className = "rev-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-cream-200 text-cream-900";
+    });
+    const activeBtn = document.getElementById(`rev-tab-${cat}`);
+    if (activeBtn) activeBtn.className = "rev-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-cream-900 text-white";
+    
+    renderReviewsList(cat);
+}
+
+function openWriteReviewModal() {
+    document.getElementById('write-review-modal').classList.remove('hidden');
+}
+function closeWriteReviewModal() {
+    document.getElementById('write-review-modal').classList.add('hidden');
+}
+
 // Hàm kết nối API Server Render để lưu thông tin vào Google Sheets
 async function submitOrderToSheet(customerData) {
     // Thay URL Render thực tế của Kem vào đây
