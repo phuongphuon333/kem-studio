@@ -302,6 +302,24 @@ let reviewsData = [
         "image": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?q=80&w=300&auto=format&fit=crop"
     }
 ];
+let reviewsData = [
+    {
+        "id": "rev-01",
+        "author": "Minh Phương",
+        "productBought": "Túi Canvas Grand Studio Tote",
+        "stars": 5,
+        "comment": "Chất vải canvas 14oz cực kỳ dày dặn, quai xách chắc chắn. Mình dùng đi làm hàng ngày đựng vừa laptop 15 inch rất thoải mái!",
+        "date": "08/11/2026"
+    },
+    {
+        "id": "rev-02",
+        "author": "Hoàng Nam",
+        "productBought": "Áo Khoác Dù Essential Windbreaker",
+        "stars": 5,
+        "comment": "Áo cản gió tốt, phom rộng vừa phải chuẩn phong cách streetwear tối giản. Rất đáng tiền!",
+        "date": "05/11/2026"
+    }
+];
 
 let bannersData = {
     "hero": {
