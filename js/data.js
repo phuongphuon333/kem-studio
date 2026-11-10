@@ -1,6 +1,6 @@
 // ==========================================
 // KEM STUDIO DATA STORE
-// Auto Updated via Admin Portal on 11:42:34 2/11/2026
+// Auto Updated via Admin Portal on 11:22:18 10/11/2026
 // ==========================================
 
 const productsData = [
@@ -221,11 +221,11 @@ const productsData = [
         "name": "Túi xách nữ đeo chéo, đeo vai đi chơi, đi học VINICHY",
         "category": "canvas-bag",
         "categoryLabel": "Túi Canvas",
-        "price": 200000,
-        "priceFormatted": "200.000 đ",
-        "badge": "grand",
+        "price": 400000,
+        "priceFormatted": "400.000 đ",
+        "badge": "essential",
         "rating": 5,
-        "reviewsCount": 84,
+        "reviewsCount": 12,
         "isNew": true,
         "isBestseller": true,
         "colors": [
