@@ -118,36 +118,20 @@
                 </button>
             </div>
 
-            <!-- TAB 1: PRODUCTS MANAGEMENT -->
-            <div id="view-products" class="space-y-4">
+            <!-- TAB 1: PRODUCTS MANAGEMENT (GROUPED BY CATEGORY) -->
+            <div id="view-products" class="space-y-6">
                 <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div class="relative w-full sm:w-72">
                         <input type="text" id="product-search" oninput="renderProductsTable()" placeholder="Tìm theo tên hoặc mã SP..." class="w-full pl-9 pr-4 py-2 bg-cream-50 rounded-xl border border-cream-200 text-xs focus:outline-none focus:ring-2 focus:ring-tan">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-cream-400 text-xs"></i>
                     </div>
                     <select id="category-filter" onchange="renderProductsTable()" class="px-3 py-2 bg-cream-50 rounded-xl border border-cream-200 text-xs font-medium text-cream-900">
-                        <option value="all">Tất cả danh mục</option>
-                        <option value="canvas-bag">Túi Canvas</option>
-                        <option value="jacket">Áo Khoác Dù</option>
-                        <option value="cargo-pants">Quần Túi Hộp</option>
+                        <!-- Options sẽ được render động theo danh mục -->
                     </select>
                 </div>
 
-                <div class="overflow-x-auto rounded-2xl border border-cream-200">
-                    <table class="w-full text-left text-xs text-cream-900">
-                        <thead class="bg-cream-100 text-cream-800 uppercase font-semibold text-[10px] tracking-wider border-b border-cream-200">
-                            <tr>
-                                <th class="p-4">Sản Phẩm</th>
-                                <th class="p-4">Danh Mục</th>
-                                <th class="p-4">Giá Bán</th>
-                                <th class="p-4">Biến Thể Màu</th>
-                                <th class="p-4">Trạng Thái</th>
-                                <th class="p-4 text-right">Thao Tác</th>
-                            </tr>
-                        </thead>
-                        <tbody id="products-table-body" class="divide-y divide-cream-100"></tbody>
-                    </table>
-                </div>
+                <!-- Container hiển thị từng nhóm Danh mục -->
+                <div id="category-sections-container" class="space-y-8"></div>
             </div>
 
             <!-- TAB 2: BANNERS & CONTENT MANAGEMENT -->
@@ -238,19 +222,17 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block font-semibold mb-1">Danh Mục *</label>
-                            <select id="p-category" class="w-full p-2.5 rounded-xl border bg-white">
-                                <option value="canvas-bag">Túi Canvas</option>
-                                <option value="jacket">Áo Khoác Dù</option>
-                                <option value="cargo-pants">Quần Túi Hộp</option>
+                            <select id="p-category" onchange="toggleNewCategoryInput()" class="w-full p-2.5 rounded-xl border bg-white font-semibold text-cream-900">
+                                <!-- Render danh mục động -->
                             </select>
+                        </div>
+                        <div id="new-cat-box" class="hidden">
+                            <label class="block font-semibold mb-1 text-tan">Tên Danh Mục Mới *</label>
+                            <input type="text" id="p-new-category" placeholder="vd: Phụ Kiện Nón" class="w-full p-2.5 rounded-xl border border-tan bg-cream-50">
                         </div>
                         <div>
                             <label class="block font-semibold mb-1">Giá Bán (VNĐ) *</label>
                             <input type="number" id="p-price" required placeholder="450000" class="w-full p-2.5 rounded-xl border bg-white">
-                        </div>
-                        <div>
-                            <label class="block font-semibold mb-1">Badge Nổi Bật</label>
-                            <input type="text" id="p-badge" placeholder="vd: grand, essential" class="w-full p-2.5 rounded-xl border bg-white">
                         </div>
                     </div>
                     <div class="flex items-center space-x-6 pt-2">
@@ -265,7 +247,7 @@
                     </div>
                 </div>
 
-                <!-- 2. SPECS CHI TIẾT SẢN PHẨM -->
+                <!-- SPECS CHI TIẾT SẢN PHẨM -->
                 <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
                     <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
                         <i class="fa-solid fa-list-check text-tan"></i> 2. Thông Số Chi Tiết (Specs)
@@ -286,7 +268,7 @@
                     </div>
                 </div>
 
-                <!-- 3. BIẾN THỂ MÀU SẮC & HÌNH ẢNH -->
+                <!-- BIẾN THỂ MÀU SẮC & HÌNH ẢNH -->
                 <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
                     <div class="flex justify-between items-center">
                         <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
@@ -297,7 +279,7 @@
                     <div id="color-swatches-container" class="space-y-3"></div>
                 </div>
 
-                <!-- 4. CÂU CHUYỆN THIẾT KẾ (STORY HIGHLIGHTS) -->
+                <!-- CÂU CHUYỆN THIẾT KẾ (STORY HIGHLIGHTS) -->
                 <div class="space-y-4 bg-cream-50 p-4 rounded-2xl border border-cream-200">
                     <h4 class="font-bold text-sm text-cream-900 flex items-center gap-2">
                         <i class="fa-solid fa-book-open text-tan"></i> 4. Câu Chuyện Thiết Kế (Story Highlights)
@@ -375,15 +357,11 @@
     <script>
         let products = (typeof productsData !== 'undefined' && productsData.length > 0) ? JSON.parse(JSON.stringify(productsData)) : [];
         let reviews = (typeof reviewsData !== 'undefined' && reviewsData.length > 0) ? JSON.parse(JSON.stringify(reviewsData)) : [];
-        let banners = (typeof bannersData !== 'undefined') ? JSON.parse(JSON.stringify(bannersData)) : {
-            hero: { tag: "NEW SEASON LOOKBOOK", title: "Wear Your Story.\nExpress Your Style.", description: "Mô tả...", image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d", buttonText: "Shop Collection" },
-            promoLeft: { tag: "30% OFF", title: "Minimalist Streetwear", description: "Mô tả...", image: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7", linkCategory: "cargo-pants" },
-            promoRight: { tag: "CRAFTED FOR COMFORT", title: "Premium Canvas Collection", description: "Mô tả...", image: "https://images.unsplash.com/photo-1544816155-12df9643f363", linkCategory: "canvas-bag" },
-            story: { tag: "KEM STUDIO PHILOSOPHY", title: "Tinh Tế Trong Từng Đường Kim Mũi Chỉ", description: "Mô tả..." }
-        };
+        let banners = (typeof bannersData !== 'undefined') ? JSON.parse(JSON.stringify(bannersData)) : {};
 
         window.addEventListener('DOMContentLoaded', () => {
             updateDashboardStats();
+            initCategorySelectOptions();
             renderProductsTable();
             renderReviewsTable();
             loadBannersToForm();
@@ -394,6 +372,54 @@
             document.getElementById('stat-new-products').innerText = products.filter(p => p.isNew).length;
             document.getElementById('stat-bestsellers').innerText = products.filter(p => p.isBestseller).length;
             document.getElementById('stat-total-reviews').innerText = reviews.length;
+        }
+
+        // Lấy danh sách danh mục duy nhất từ dữ liệu sản phẩm
+        function getUniqueCategories() {
+            const catMap = new Map();
+            catMap.set('canvas-bag', 'Túi Canvas');
+            catMap.set('jacket', 'Áo Khoác Dù');
+            catMap.set('cargo-pants', 'Quần Túi Hộp');
+
+            products.forEach(p => {
+                if (p.category && p.categoryLabel) {
+                    catMap.set(p.category, p.categoryLabel);
+                }
+            });
+            return catMap;
+        }
+
+        function initCategorySelectOptions() {
+            const catMap = getUniqueCategories();
+            
+            // 1. Render Filter dropdown
+            const filterSelect = document.getElementById('category-filter');
+            let filterHTML = `<option value="all">Tất cả danh mục (${products.length})</option>`;
+            catMap.forEach((label, slug) => {
+                const count = products.filter(p => p.category === slug).length;
+                filterHTML += `<option value="${slug}">${label} (${count})</option>`;
+            });
+            filterSelect.innerHTML = filterHTML;
+
+            // 2. Render Modal Category Select
+            const modalSelect = document.getElementById('p-category');
+            let modalHTML = '';
+            catMap.forEach((label, slug) => {
+                modalHTML += `<option value="${slug}">${label}</option>`;
+            });
+            modalHTML += `<option value="__NEW_CATEGORY__">➕ + Thêm danh mục mới...</option>`;
+            modalSelect.innerHTML = modalHTML;
+        }
+
+        function toggleNewCategoryInput() {
+            const val = document.getElementById('p-category').value;
+            const newBox = document.getElementById('new-cat-box');
+            if (val === '__NEW_CATEGORY__') {
+                newBox.classList.remove('hidden');
+                document.getElementById('p-new-category').focus();
+            } else {
+                newBox.classList.add('hidden');
+            }
         }
 
         function switchTab(tab) {
@@ -439,8 +465,9 @@
             showToast("Đã lưu Banner! Nhấn 'Đẩy Lên GitHub' để cập nhật Web.");
         }
 
+        // RENDER DANH SÁCH SẢN PHẨM PHÂN NHÓM THEO DANH MỤC
         function renderProductsTable() {
-            const tbody = document.getElementById('products-table-body');
+            const container = document.getElementById('category-sections-container');
             const query = document.getElementById('product-search').value.toLowerCase();
             const catFilter = document.getElementById('category-filter').value;
 
@@ -450,25 +477,81 @@
                 return matchSearch && matchCat;
             });
 
-            tbody.innerHTML = filtered.map(p => `
-                <tr class="hover:bg-cream-50 transition">
-                    <td class="p-4 flex items-center space-x-3">
-                        <img src="${p.colors[0]?.image || 'https://via.placeholder.com/80'}" class="w-12 h-12 rounded-xl object-cover border">
-                        <div>
-                            <h4 class="font-bold text-cream-900">${p.name}</h4>
-                            <span class="font-mono text-[10px] text-cream-400">ID: ${p.id}</span>
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-white rounded-2xl border border-cream-200 text-cream-800 text-xs">
+                        Không tìm thấy sản phẩm phù hợp!
+                    </div>
+                `;
+                return;
+            }
+
+            // Nhóm các sản phẩm theo category
+            const grouped = {};
+            filtered.forEach(p => {
+                const catKey = p.category || 'other';
+                if (!grouped[catKey]) {
+                    grouped[catKey] = {
+                        label: p.categoryLabel || 'Danh mục khác',
+                        items: []
+                    };
+                }
+                grouped[catKey].items.push(p);
+            });
+
+            // Render từng khối bảng cho từng danh mục
+            let html = '';
+            for (const key in grouped) {
+                const group = grouped[key];
+                html += `
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between border-b border-cream-300 pb-2">
+                            <h3 class="serif-title text-lg font-bold text-cream-900 flex items-center gap-2">
+                                <i class="fa-solid fa-folder-open text-tan text-sm"></i> ${group.label}
+                                <span class="bg-cream-200 text-cream-900 text-[10px] font-bold px-2 py-0.5 rounded-full">${group.items.length} SP</span>
+                            </h3>
                         </div>
-                    </td>
-                    <td class="p-4"><span class="px-2.5 py-1 bg-cream-100 rounded-full text-[10px] font-semibold">${p.categoryLabel}</span></td>
-                    <td class="p-4 font-bold text-cream-900">${p.priceFormatted}</td>
-                    <td class="p-4">(${p.colors.length} màu)</td>
-                    <td class="p-4">${p.isNew ? '<span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full mr-1">MỚI</span>' : ''} ${p.isBestseller ? '<span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full">HOT</span>' : ''}</td>
-                    <td class="p-4 text-right space-x-2">
-                        <button onclick="openProductModal('${p.id}')" class="p-2 text-cream-900 hover:text-tan text-sm"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <button onclick="deleteProduct('${p.id}')" class="p-2 text-red-500 hover:text-red-700 text-sm"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+
+                        <div class="overflow-x-auto rounded-2xl border border-cream-200 bg-white">
+                            <table class="w-full text-left text-xs text-cream-900">
+                                <thead class="bg-cream-100 text-cream-800 uppercase font-semibold text-[10px] tracking-wider border-b border-cream-200">
+                                    <tr>
+                                        <th class="p-4">Sản Phẩm</th>
+                                        <th class="p-4">Mã SP</th>
+                                        <th class="p-4">Giá Bán</th>
+                                        <th class="p-4">Biến Thể Màu</th>
+                                        <th class="p-4">Trạng Thái</th>
+                                        <th class="p-4 text-right">Thao Tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-cream-100">
+                                    ${group.items.map(p => `
+                                        <tr class="hover:bg-cream-50 transition">
+                                            <td class="p-4 flex items-center space-x-3">
+                                                <img src="${p.colors[0]?.image || 'https://via.placeholder.com/80'}" class="w-12 h-12 rounded-xl object-cover border bg-cream-100">
+                                                <div>
+                                                    <h4 class="font-bold text-cream-900">${p.name}</h4>
+                                                    <span class="text-[10px] text-tan font-semibold">${p.categoryLabel}</span>
+                                                </div>
+                                            </td>
+                                            <td class="p-4 font-mono text-[11px] text-cream-800">${p.id}</td>
+                                            <td class="p-4 font-bold text-cream-900">${p.priceFormatted}</td>
+                                            <td class="p-4">(${p.colors.length} màu)</td>
+                                            <td class="p-4">${p.isNew ? '<span class="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-2 py-0.5 rounded-full mr-1">MỚI</span>' : ''} ${p.isBestseller ? '<span class="bg-amber-100 text-amber-800 text-[9px] font-bold px-2 py-0.5 rounded-full">HOT</span>' : ''}</td>
+                                            <td class="p-4 text-right space-x-2">
+                                                <button onclick="openProductModal('${p.id}')" class="p-2 text-cream-900 hover:text-tan text-sm" title="Chỉnh sửa"><i class="fa-solid fa-pen-to-square"></i></button>
+                                                <button onclick="deleteProduct('${p.id}')" class="p-2 text-red-500 hover:text-red-700 text-sm" title="Xóa"><i class="fa-solid fa-trash-can"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
         }
 
         function renderReviewsTable() {
@@ -488,8 +571,10 @@
         }
 
         function openProductModal(id = null) {
+            initCategorySelectOptions(); // Nạp danh mục mới nhất vào select
             const container = document.getElementById('color-swatches-container');
             container.innerHTML = '';
+            document.getElementById('new-cat-box').classList.add('hidden');
 
             if (id) {
                 const p = products.find(x => x.id === id);
@@ -499,7 +584,6 @@
                 document.getElementById('p-name').value = p.name;
                 document.getElementById('p-category').value = p.category;
                 document.getElementById('p-price').value = p.price;
-                document.getElementById('p-badge').value = p.badge || '';
                 document.getElementById('p-isNew').checked = !!p.isNew;
                 document.getElementById('p-isBestseller').checked = !!p.isBestseller;
 
@@ -528,7 +612,7 @@
                 document.getElementById('modal-product-title').innerText = "Thêm Sản Phẩm Mới";
                 document.getElementById('product-form').reset();
                 document.getElementById('p-id').readOnly = false;
-                document.getElementById('p-id').value = 'bag-' + String(products.length + 1).padStart(2, '0');
+                document.getElementById('p-id').value = 'sp-' + String(products.length + 1).padStart(2, '0');
                 addColorSwatch('Default Color', '#8C7A6B', 'https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop');
             }
 
@@ -552,7 +636,24 @@
         function saveProduct(e) {
             e.preventDefault();
             const id = document.getElementById('p-id').value.trim();
-            const catLabels = { 'canvas-bag': 'Túi Canvas', 'jacket': 'Áo Khoác Dù', 'cargo-pants': 'Quần Túi Hộp' };
+
+            // Xử lý Danh mục & Danh mục Mới
+            let categorySlug = document.getElementById('p-category').value;
+            let categoryLabel = '';
+            
+            if (categorySlug === '__NEW_CATEGORY__') {
+                const newLabel = document.getElementById('p-new-category').value.trim();
+                if (!newLabel) {
+                    alert("Vui lòng nhập Tên Danh Mục Mới!");
+                    return;
+                }
+                categoryLabel = newLabel;
+                // Tự tạo slug id cho danh mục mới
+                categorySlug = newLabel.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "-");
+            } else {
+                const catMap = getUniqueCategories();
+                categoryLabel = catMap.get(categorySlug) || 'Mặt hàng';
+            }
 
             const colors = [];
             document.querySelectorAll('#color-swatches-container .color-item').forEach(div => {
@@ -568,13 +669,13 @@
             const productObj = {
                 id,
                 name: document.getElementById('p-name').value.trim(),
-                category: document.getElementById('p-category').value,
-                categoryLabel: catLabels[document.getElementById('p-category').value] || 'Mặt hàng',
+                category: categorySlug,
+                categoryLabel: categoryLabel,
                 price: price,
                 priceFormatted: price.toLocaleString('vi-VN') + ' đ',
-                badge: document.getElementById('p-badge').value.trim() || 'grand',
+                badge: 'essential',
                 rating: 5.0,
-                reviewsCount: 84,
+                reviewsCount: 12,
                 isNew: document.getElementById('p-isNew').checked,
                 isBestseller: document.getElementById('p-isBestseller').checked,
                 colors: colors,
@@ -606,15 +707,17 @@
             if (idx >= 0) products[idx] = productObj; else products.push(productObj);
             
             updateDashboardStats();
+            initCategorySelectOptions();
             renderProductsTable();
             closeProductModal();
-            showToast("Đã lưu sản phẩm! Bấm 'Đẩy Lên GitHub' để cập nhật.");
+            showToast("Đã lưu sản phẩm vào danh mục " + categoryLabel + "! Nhấn 'Đẩy Lên GitHub' để cập nhật.");
         }
 
         function deleteProduct(id) {
             if (confirm(`Kem có chắc muốn xóa sản phẩm ${id} không?`)) {
                 products = products.filter(p => p.id !== id);
                 updateDashboardStats();
+                initCategorySelectOptions();
                 renderProductsTable();
                 showToast("Đã xóa sản phẩm!");
             }
@@ -629,7 +732,7 @@
             }
         }
 
-        // ================= GITHUB AUTOMATIC COMMIT API =================
+        // GITHUB AUTOMATIC COMMIT API
         function openConfigModal() {
             document.getElementById('cfg-owner').value = localStorage.getItem('kem_gh_owner') || 'phuongphuon333';
             document.getElementById('cfg-repo').value = localStorage.getItem('kem_gh_repo') || '';
